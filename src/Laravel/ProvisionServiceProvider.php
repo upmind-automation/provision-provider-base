@@ -65,4 +65,22 @@ class ProvisionServiceProvider extends BaseProvider
     {
         return $this->app->make(Registry::class);
     }
+
+    public function register()
+    {
+        // Bind registry as singleton to container
+        $this->app->singleton(Registry::class, function () {
+            return Registry::getInstance();
+        });
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return [Registry::class];
+    }
 }
