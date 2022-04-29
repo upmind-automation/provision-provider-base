@@ -1,0 +1,34 @@
+{
+    "name": "upmind/provision-provider-base",
+    "description": "This library contains all the base interfaces, classes and logic to create provision category and provider classes, and register them for use in a laravel application.",
+    "type": "library",
+    "license": "GPL-3.0-only",
+    "authors": [
+        {
+            "name": "Harry Lewis",
+            "email": "harry@upmind.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Upmind\\ProvisionBase\\": "src/"
+        }
+    },
+    "require": {
+        "illuminate/support": "5.8.*|^6.0",
+        "guzzlehttp/guzzle": "^6.3",
+        "illuminate/validation": "5.8.*|^6.0",
+        "propaganistas/laravel-phone": "^4.2",
+        "illuminate/encryption": "5.8.*|^6.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Upmind\\ProvisionBase\\Laravel\\ValidationServiceProvider",
+                "Propaganistas\\LaravelPhone\\PhoneServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
