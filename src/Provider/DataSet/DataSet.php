@@ -237,6 +237,22 @@ abstract class DataSet implements ArrayAccess, JsonSerializable, Arrayable, Json
     }
 
     /**
+     * Get an array of validation errors for this instance's data.
+     *
+     * @return array<string[]>
+     */
+    public function errors(): array
+    {
+        try {
+            $this->validate();
+
+            return [];
+        } catch (InvalidDataSetException $e) {
+            return $e->errors();
+        }
+    }
+
+    /**
      * Validate the data set if auto-validation is enabled and the data has not yet been validated.
      *
      * @throws InvalidDataSetException If the data set is invalid
