@@ -19,7 +19,8 @@
         "guzzlehttp/guzzle": "^6.3",
         "illuminate/validation": "5.8.*|^6.0",
         "propaganistas/laravel-phone": "^4.2",
-        "illuminate/encryption": "5.8.*|^6.0"
+        "illuminate/encryption": "5.8.*|^6.0",
+        "psr/log": "^1.1"
     },
     "extra": {
         "laravel": {
