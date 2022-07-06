@@ -402,6 +402,16 @@ abstract class ClassRegister implements RegisterInterface
         return $this->identifier;
     }
 
+    /**
+     * Unset ReflectionClass - these cannot be serialized after PHP 7.3.
+     */
+    public function __sleep()
+    {
+        unset($this->reflection);
+
+        return array_keys(get_object_vars($this));
+    }
+
     public function __debugInfo()
     {
         return [
