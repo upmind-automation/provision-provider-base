@@ -132,15 +132,17 @@ class ValidationServiceProvider extends BaseProvider
                 ]);
 
                 if ($extraValidator->fails()) {
-                    // manually adding an error will cause validation to fail with this specific error message
-                    $validator->errors()
-                        ->add(
-                            $attribute,
-                            $this->makeReplacements('This is not a valid :COUNTRY_CODE phone number', [
-                                'attribute' => $attribute,
-                                'country_code' => $countryCode,
-                            ])
-                        );
+                    if (!$this->manualCheckPhones($value)) {
+                        // manually adding an error will cause validation to fail with this specific error message
+                        $validator->errors()
+                            ->add(
+                                $attribute,
+                                $this->makeReplacements('This is not a valid :COUNTRY_CODE phone number', [
+                                    'attribute' => $attribute,
+                                    'country_code' => $countryCode,
+                                ])
+                            );
+                    }
                 }
 
                 return true;
@@ -165,7 +167,7 @@ class ValidationServiceProvider extends BaseProvider
                 $phone = phone($value);
                 $phone->getCountry();
             } catch (PropaganistasNumberParseException | NumberParseException $e) {
-                return false;
+                return $this->manualCheckPhones($value);
             }
 
             return true;
@@ -262,5 +264,29 @@ class ValidationServiceProvider extends BaseProvider
         return (new Collection($replace))->sortBy(function ($value, $key) {
             return mb_strlen($key) * -1;
         })->all();
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    private function manualCheckPhones($value): bool
+    {
+        //Morocco phone validation
+        if (preg_match('/(\+212|0)([ \-_\/]*)(\d[ \-_\/]*){9}/', $value)) {
+            return true;
+        }
+
+        //Zimbabwe phone validation
+        if (preg_match('/(\+263|0)([ \-_\/]*)(\d[ \-_\/]*){9}/', $value)) {
+            return true;
+        }
+
+        //Ivory Coast phone validation
+        if (preg_match('/(\+225|0)([ \-_\/]*)(\d[ \-_\/]*){10}/', $value)) {
+            return true;
+        }
+
+        return false;
     }
 }
