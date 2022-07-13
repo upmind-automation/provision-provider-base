@@ -273,17 +273,17 @@ class ValidationServiceProvider extends BaseProvider
     private function manualCheckPhones($value): bool
     {
         //Morocco phone validation
-        if (preg_match('/(\+212|0)([ \-_\/]*)(\d[ \-_\/]*){9}/', $value)) {
+        if (preg_match('/(\+212|0)\.?([ \-_\/]*)(\d[ \-_\/]*){9}/', $value)) {
             return true;
         }
 
         //Zimbabwe phone validation
-        if (preg_match('/(\+263|0)([ \-_\/]*)(\d[ \-_\/]*){9}/', $value)) {
+        if (preg_match('/(\+263|0)\.?([ \-_\/]*)(\d[ \-_\/]*){9}/', $value)) {
             return true;
         }
 
         //Ivory Coast phone validation
-        if (preg_match('/(\+225|0)([ \-_\/]*)(\d[ \-_\/]*){10}/', $value)) {
+        if (preg_match('/(\+225|0)\.?([ \-_\/]*)(\d[ \-_\/]*){10}/', $value)) {
             return true;
         }
 
