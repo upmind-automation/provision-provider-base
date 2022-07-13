@@ -537,6 +537,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 ## Credits
 
  - [Harry Lewis](https://github.com/uphlewis)
+ - [Nikolai Arsov](https://github.com/nikiarsov777)
  - [All Contributors](../../contributors)
 
 ## License
