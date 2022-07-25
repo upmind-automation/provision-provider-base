@@ -2,6 +2,11 @@
 
 All notable changes to the package will be documented in this file.
 
+## v2.0.5 - 2022-07-25
+
+- Prevent type errors resulting from passing non-string values to preg_match in
+  ValidationServiceProvider
+
 ## v2.0.4 - 2022-07-13
 
 - FIX (Issue #2): Implement international_phone validation rule workaround for
