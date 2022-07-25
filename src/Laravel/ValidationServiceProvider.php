@@ -76,7 +76,7 @@ class ValidationServiceProvider extends BaseProvider
     protected function bootAlphaScoreRule()
     {
         $extension = function ($attribute, $value, $parameters, $validator) {
-            return !preg_match('/[^\w]/', $value);
+            return !preg_match('/[^\w]/', strval($value));
         };
         $message = 'This value must only contain letters, numbers and underscores.';
 
@@ -87,7 +87,7 @@ class ValidationServiceProvider extends BaseProvider
     protected function bootAlphaDashDotRule()
     {
         $extension = function ($attribute, $value, $parameters, $validator) {
-            return !preg_match('/[^\w\-\.]/', $value);
+            return !preg_match('/[^\w\-\.]/', strval($value));
         };
         $message = 'This value must only contain letters, numbers, dashes, underscores and periods.';
 
@@ -99,7 +99,8 @@ class ValidationServiceProvider extends BaseProvider
     {
         $extension = function ($attribute, $value, $parameters, $validator) {
             /** @link https://stackoverflow.com/a/4694816/4741456 */
-            return preg_match('/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))+$/i', $value) //valid chars check
+            return is_string($value)
+                && preg_match('/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))+$/i', $value) //valid chars check
                 && preg_match('/^.{3,253}$/', $value) //overall length check
                 && preg_match('/^[^\.]{1,63}(\.[^\.]{1,63})*$/', $value); //length of each label
         };
@@ -272,6 +273,8 @@ class ValidationServiceProvider extends BaseProvider
      */
     private function manualCheckPhones($value): bool
     {
+        $value = strval($value);
+
         //Morocco phone validation
         if (preg_match('/(\+212|0)\.?([ \-_\/]*)(\d[ \-_\/]*){9}/', $value)) {
             return true;
