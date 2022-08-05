@@ -2,6 +2,10 @@
 
 All notable changes to the package will be documented in this file.
 
+## v2.1 - 2022-08-05
+
+- Add new `certificate_pem` validation rule
+
 ## v2.0.5 - 2022-07-25
 
 - Prevent type errors resulting from passing non-string values to preg_match in
