@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use League\ISO3166\ISO3166;
 use libphonenumber\NumberParseException;
 use Propaganistas\LaravelPhone\Exceptions\NumberParseException as PropaganistasNumberParseException;
+use Upmind\ProvisionBase\Laravel\ValidationRules\CertificatePem;
 use Upmind\ProvisionBase\Provider\DataSet\RuleParser;
 use Upmind\ProvisionBase\Provider\DataSet\Validator as DataSetValidator;
 
@@ -50,6 +51,8 @@ class ValidationServiceProvider extends BaseProvider
         $this->bootCountryCodeRule();
 
         $this->bootStepRule();
+
+        $this->bootCertificatePemRule();
     }
 
     protected function bootDataSetValidatorResolver()
@@ -220,6 +223,15 @@ class ValidationServiceProvider extends BaseProvider
     {
         Validator::extend('step', 'Upmind\ProvisionBase\Laravel\ValidationRules\Step@validateStep');
         Validator::replacer('step', 'Upmind\ProvisionBase\Laravel\ValidationRules\Step@replaceStep');
+    }
+
+    protected function bootCertificatePemRule(): void
+    {
+        Validator::extend(
+            'certificate_pem',
+            CertificatePem::class,
+            'The :attribute must be a certificate in PEM format'
+        );
     }
 
     /**
