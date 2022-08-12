@@ -2,6 +2,11 @@
 
 All notable changes to the package will be documented in this file.
 
+## v2.1.1 - 2022-08-12
+
+- Implement international_phone validation rule workaround for new
+  Nigeria 091 phone number format
+
 ## v2.1 - 2022-08-05
 
 - Add new `certificate_pem` validation rule
