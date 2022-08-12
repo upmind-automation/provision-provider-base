@@ -302,6 +302,11 @@ class ValidationServiceProvider extends BaseProvider
             return true;
         }
 
+        //Nigerian 91 Coast phone validation
+        if (preg_match('/(\+234|0)91\.?([ \-_\/]*)(\d[ \-_\/]*){8}$/', $value)) {
+            return true;
+        }
+
         return false;
     }
 }
