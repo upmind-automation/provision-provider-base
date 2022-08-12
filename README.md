@@ -538,6 +538,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
  - [Harry Lewis](https://github.com/uphlewis)
  - [Nikolai Arsov](https://github.com/nikiarsov777)
+ - [Ivaylo Georgiev](https://github.com/Georgiev-Ivaylo)
  - [All Contributors](../../contributors)
 
 ## License
