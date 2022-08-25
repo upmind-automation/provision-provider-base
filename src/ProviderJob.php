@@ -211,13 +211,14 @@ class ProviderJob
                     [$this->getProvider()->getInstance(), $this->getFunction()],
                     $this->getParameterData()
                 );
-                $executeEndTime = microtime(true);
             } catch (ProvisionFunctionError $e) {
                 throw $e;
             } catch (Exception $e) {
                 throw new ProvisionFunctionError('Internal provision provider error', (int)$e->getCode(), $e);
             } catch (Error $e) {
                 throw new CriticalProvisionProviderError('Critical provision provider error', (int)$e->getCode(), $e);
+            } finally {
+                $executeEndTime = microtime(true);
             }
 
             //ensure return data is of the correct type
@@ -229,11 +230,12 @@ class ProviderJob
             $this->validateReturnData();
 
             //create successful job result
-            return $this->result = $this->createSuccessResult($this->returnData)
-                ->withExecutionTimeDebug($executeEndTime - $executeStartTime);
+            return $this->result = $this->createSuccessResult($this->returnData);
         } catch (Throwable $e) {
             return $this->result = $this->createErrorResult($e, $this->returnData ?? null)
                 ->withProviderJobDebug($this);
+        } finally {
+            return $this->result->withExecutionTimeDebug($executeEndTime - $executeStartTime);
         }
     }
 
