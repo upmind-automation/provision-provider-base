@@ -2,6 +2,10 @@
 
 All notable changes to the package will be documented in this file.
 
+## v2.1.2 - 2022-08-26
+
+- Update ProviderJob always return result with `execution_time` debug
+
 ## v2.1.1 - 2022-08-12
 
 - Implement international_phone validation rule workaround for new
