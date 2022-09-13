@@ -16,6 +16,11 @@ use Upmind\ProvisionBase\Exception\RegistryError;
 class ProvisionServiceProvider extends BaseProvider
 {
     /**
+     * @var string
+     */
+    public const REGISTRY_CACHE_KEY = 'Upmind/Provision/Registry';
+
+    /**
      * Binds a Category to the provision registry.
      *
      * @param string $identifier Unique category identifier
