@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Upmind\ProvisionBase\Laravel\ValidationRules;
+namespace Upmind\ProvisionBase\Laravel\Validation\Rules;
 
 use Illuminate\Validation\Validator;
 use RuntimeException;
@@ -76,13 +76,13 @@ class Step
     /**
      * Get the step parameter/argument from the step rule. E.g., step:0.1 returns 0.1
      *
-     * @param iterable $parameters
+     * @param array $parameters
      *
      * @return int|float
      */
     public function getStepParameter($parameters)
     {
-        if (!is_iterable($parameters) || count($parameters) !== 1) {
+        if (!is_array($parameters) || count($parameters) !== 1) {
             throw new RuntimeException('Step rule requires a single argument');
         }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Upmind\ProvisionBase\Laravel\ValidationRules;
+namespace Upmind\ProvisionBase\Laravel\Validation\Rules;
 
 use Illuminate\Validation\Validator;
 
