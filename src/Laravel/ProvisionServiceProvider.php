@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Upmind\ProvisionBase\Laravel;
 
+use Illuminate\Contracts\Cache\Repository as CacheInterface;
 use Illuminate\Support\ServiceProvider as BaseProvider;
 use Throwable;
 use Upmind\ProvisionBase\Registry\Registry;
@@ -68,24 +69,45 @@ class ProvisionServiceProvider extends BaseProvider
      */
     protected function provisionRegistry(): Registry
     {
+        if (!$this->app->has(Registry::class)) {
+            $this->bootRegistry();
+        }
+
         return $this->app->make(Registry::class);
     }
 
-    public function register()
+    protected function cache(): CacheInterface
     {
+        return $this->app->make(CacheInterface::class);
+    }
+
+    public function boot()
+    {
+        if (!$this->app->has(Registry::class)) {
+            $this->bootRegistry();
+        }
+    }
+
+    protected function bootRegistry(): void
+    {
+        $cache = $this->cache();
+
+        // Attempt to set the Registry instance from cache
+        if ($cachedRegistry = $cache->get(self::REGISTRY_CACHE_KEY)) {
+            try {
+                $registry = unserialize($cachedRegistry);
+            } catch (Throwable $e) {
+                $cache->forget(self::REGISTRY_CACHE_KEY);
+            }
+
+            if ($registry instanceof Registry) {
+                Registry::setInstance($registry);
+            }
+        }
+
         // Bind registry as singleton to container
         $this->app->singleton(Registry::class, function () {
             return Registry::getInstance();
         });
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [Registry::class];
     }
 }
