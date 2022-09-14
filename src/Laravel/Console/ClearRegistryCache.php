@@ -16,7 +16,7 @@ class ClearRegistryCache extends Command
      *
      * @var string
      */
-    protected $signature = 'upmind:provision:clear';
+    protected $signature = 'upmind:provision:clear {--without-summary : Don\'t output a registry summary}';
 
     /**
      * The console command description.
@@ -34,7 +34,9 @@ class ClearRegistryCache extends Command
     {
         $this->clearRegistry($cache);
 
-        $this->call('upmind:provision:summary');
+        if (!$this->option('without-summary')) {
+            $this->call('upmind:provision:summary');
+        }
 
         return 0;
     }

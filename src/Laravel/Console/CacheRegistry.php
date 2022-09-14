@@ -17,7 +17,7 @@ class CacheRegistry extends Command
      *
      * @var string
      */
-    protected $signature = 'upmind:provision:cache';
+    protected $signature = 'upmind:provision:cache {--without-summary : Don\'t output a registry summary}';
 
     /**
      * The console command description.
@@ -35,7 +35,9 @@ class CacheRegistry extends Command
     {
         $this->cacheRegistry($registry, $cache);
 
-        $this->call('upmind:provision:summary');
+        if (!$this->option('without-summary')) {
+            $this->call('upmind:provision:summary');
+        }
 
         return 0;
     }
@@ -47,7 +49,7 @@ class CacheRegistry extends Command
     {
         if ($registry->wasCached()) {
             $oldHash = sha1($cache->get(ProvisionServiceProvider::REGISTRY_CACHE_KEY));
-            $this->call('upmind:provision:clear');
+            $this->call('upmind:provision:clear', ['--without-summary' => true]);
         }
 
         if ($registry->getCategories()->isEmpty()) {
