@@ -8,6 +8,7 @@ use ArrayAccess;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use JsonSerializable;
+use Upmind\ProvisionBase\Laravel\Html\HtmlField;
 
 /**
  * Provision data set validation rules
@@ -148,6 +149,18 @@ final class Rules implements ArrayAccess, JsonSerializable, Arrayable, Jsonable
         $this->expand($this->parentField);
 
         unset($this->expandedRules[$offset]);
+    }
+
+    /**
+     * @return HtmlField[]
+     */
+    public function toHtmlFields(): array
+    {
+        return collect($this->toArray())
+            ->map(function ($rules, $field) {
+                return HtmlField::createFromValidationRules($field, $rules);
+            })
+            ->all();
     }
 
     /**
