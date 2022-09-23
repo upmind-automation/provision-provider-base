@@ -2,6 +2,10 @@
 
 All notable changes to the package will be documented in this file.
 
+## WIP
+
+- Fix spelling error in Upmind\ProvisionBase\Provider\Helper\Api\Response::getDefaultMessage()
+
 ## v2.1.2 - 2022-08-26
 
 - Update ProviderJob always return result with `execution_time` debug
