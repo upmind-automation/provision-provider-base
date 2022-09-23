@@ -96,7 +96,7 @@ class Response implements ApiResponse
             return 'Unexpected Redirect';
         }
 
-        return 'Unkown Error';
+        return 'Unknown Error';
     }
 
     /**
