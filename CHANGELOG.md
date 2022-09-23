@@ -2,7 +2,7 @@
 
 All notable changes to the package will be documented in this file.
 
-## WIP
+## v2.1.3 - 2022-09-23
 
 - Fix spelling error in Upmind\ProvisionBase\Provider\Helper\Api\Response::getDefaultMessage()
 
