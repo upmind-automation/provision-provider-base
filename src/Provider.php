@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Upmind\ProvisionBase;
 
 use InvalidArgumentException;
+use RuntimeException;
 use Upmind\ProvisionBase\Exception\InvalidProviderJob;
 use Upmind\ProvisionBase\Provider\Contract\ProviderInterface;
 use Upmind\ProvisionBase\Registry\Data\ProviderRegister;
@@ -53,7 +54,19 @@ class Provider
      */
     public function getInstance(): ProviderInterface
     {
+        if (!isset($this->instance)) {
+            throw new RuntimeException('Provider instance has been unset');
+        }
+
         return $this->instance;
+    }
+
+    /**
+     * Unset the provider instance (e.g, to trigger destructors).
+     */
+    public function unsetInstance(): void
+    {
+        unset($this->instance);
     }
 
     /**

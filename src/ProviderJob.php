@@ -235,6 +235,13 @@ class ProviderJob
             return $this->result = $this->createErrorResult($e, $this->returnData ?? null)
                 ->withProviderJobDebug($this);
         } finally {
+            try {
+                // trigger destructors to prevent destruct errors from affecting the provision result
+                $this->getProvider()->unsetInstance();
+            } catch (Throwable $e) {
+                $this->result->withProviderDestructorExceptionDebug($e);
+            }
+
             return $this->result->withExecutionTimeDebug($executeEndTime - $executeStartTime);
         }
     }

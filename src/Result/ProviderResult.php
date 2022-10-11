@@ -68,6 +68,26 @@ class ProviderResult extends Result implements ResultInterface
     }
 
     /**
+     * Adds a Provider destructor exception to debug data
+     *
+     * @param Throwable $e
+     *
+     * @return self
+     */
+    public function withProviderDestructorExceptionDebug(Throwable $e): self
+    {
+        // Record the first exception in the chain
+        while ($previous = $e->getPrevious()) {
+            $e = $previous;
+        }
+
+        $this->debug = Arr::wrap($this->debug);
+        Arr::set($this->debug, 'provider_destructor_exception', self::formatException($e));
+
+        return $this;
+    }
+
+    /**
      * Adds the ProviderJob to debug data
      *
      * @param ProviderJob $job
