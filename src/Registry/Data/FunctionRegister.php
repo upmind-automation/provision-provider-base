@@ -102,6 +102,18 @@ final class FunctionRegister implements RegisterInterface
     }
 
     /**
+     * Get the category register of this function.
+     */
+    public function getCategory(): CategoryRegister
+    {
+        if ($this->parent instanceof CategoryRegister) {
+            return $this->parent;
+        }
+
+        return $this->parent->getCategory();
+    }
+
+    /**
      * Get the function parameter data set.
      */
     public function getParameter(): DataSetRegister
