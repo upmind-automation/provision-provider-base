@@ -118,8 +118,23 @@ class ProviderFactory
         return new Storage($this->filesystem, $path, $storeConfig->secret_key);
     }
 
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
+    }
+
     public function getLogger(): LoggerInterface
     {
         return $this->logger;
+    }
+
+    public function setFilesystem(Filesystem $filesystem): void
+    {
+        $this->filesystem = $filesystem;
+    }
+
+    public function getFilesystem(): Filesystem
+    {
+        return $this->filesystem;
     }
 }
