@@ -2,6 +2,25 @@
 
 All notable changes to the package will be documented in this file.
 
+## v3.0.0 - 2022-10-14
+
+### New
+- Add console commands for inspecting and caching the provision registry
+- Add HtmlField class for representing a set of validation rules by an input form
+  field
+- Add method to conveniently convert a DataSet\Rules instance to an array of HtmlField
+  instances
+- Add optional `icon` and `logo_url` values to Provider + Category AboutData
+- Update ProvisionResult to add support for destructor exception debug data
+- Add getter and setter methods for Logger and Filesystem in ProviderFactory
+- Various minor bugfixes and convenience methods added to internal classes
+
+### Changed (Breaking)
+- Move custom validation rule classes to their own sub-directory/namespace
+- Explicitly unset Provider instance when executing a ProviderJob to immediately
+  trigger destructors
+- Changes to various internal class method parameter types
+
 ## v2.1.3 - 2022-09-23
 
 - Fix spelling error in Upmind\ProvisionBase\Provider\Helper\Api\Response::getDefaultMessage()
