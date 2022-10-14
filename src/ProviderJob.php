@@ -200,13 +200,14 @@ class ProviderJob
             return $this->result;
         }
 
+        $executeStartTime = microtime(true);
+
         try {
             //validate parameter data
             $this->validateParameterData();
 
             try {
                 //execute function
-                $executeStartTime = microtime(true);
                 $this->returnData = call_user_func(
                     [$this->getProvider()->getInstance(), $this->getFunction()],
                     $this->getParameterData()
@@ -217,8 +218,6 @@ class ProviderJob
                 throw new ProvisionFunctionError('Internal provision provider error', (int)$e->getCode(), $e);
             } catch (Error $e) {
                 throw new CriticalProvisionProviderError('Critical provision provider error', (int)$e->getCode(), $e);
-            } finally {
-                $executeEndTime = microtime(true);
             }
 
             //ensure return data is of the correct type
@@ -242,7 +241,7 @@ class ProviderJob
                 $this->result->withProviderDestructorExceptionDebug($e);
             }
 
-            return $this->result->withExecutionTimeDebug($executeEndTime - $executeStartTime);
+            return $this->result->withExecutionTimeDebug(microtime(true) - $executeStartTime);
         }
     }
 
