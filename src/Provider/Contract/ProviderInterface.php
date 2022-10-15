@@ -11,7 +11,7 @@ use Upmind\ProvisionBase\Provider\DataSet\DataSet;
  * Provider classes must extend from their parent Category and implement each of
  * their abstract methods.
  */
-interface ProviderInterface extends CategoryInterface
+interface ProviderInterface extends CategoryInterface, LogsDebugData
 {
     // This actually isn't possible because PHP wont allow covariant parameter types
     // /**

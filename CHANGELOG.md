@@ -2,6 +2,11 @@
 
 All notable changes to the package will be documented in this file.
 
+## v3.1.0 - 2022-10-15
+
+- Update ProviderInterface to extend LogsDebugData so that a logger instance is
+  always injected to every Provider
+
 ## v3.0.0 - 2022-10-14
 
 ### New

@@ -7,6 +7,9 @@ namespace Upmind\ProvisionBase\Provider\Contract;
 use Psr\Log\LoggerInterface;
 use Upmind\ProvisionBase\Provider\Storage\Storage;
 
+/**
+ * Marker interface used to indicate Providers which need a logger instance.
+ */
 interface LogsDebugData
 {
     /**
