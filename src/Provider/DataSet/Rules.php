@@ -157,6 +157,9 @@ final class Rules implements ArrayAccess, JsonSerializable, Arrayable, Jsonable
     public function toHtmlFields(): array
     {
         return collect($this->toArray())
+            ->reject(function ($rules) {
+                return RuleParser::containsRule($rules, RuleParser::NESTED_DATA_SET_RULE);
+            })
             ->map(function ($rules, $field) {
                 return HtmlField::createFromValidationRules($field, $rules);
             })
