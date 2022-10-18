@@ -2,6 +2,10 @@
 
 All notable changes to the package will be documented in this file.
 
+## v3.2.0 - 2022-10-18
+
+- Widen guzzlehttp/guzzle version constraint to allow v7
+
 ## v3.1.1 - 2022-10-17
 
 - Fix DataSet\\Rules::toHtmlFields() to not return fields for NESTED_DATA_SET_RULE
