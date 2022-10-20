@@ -29,7 +29,7 @@ application.
 ## Installation
 
 ```bash
-composer require upmind/provision-provider-shared-hosting
+composer require upmind/provision-provider-base
 ```
 ## Usage
 
