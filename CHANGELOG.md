@@ -2,6 +2,11 @@
 
 All notable changes to the package will be documented in this file.
 
+## v3.3.0 - 2022-10-20
+
+- Add Helper::generateStrictPassword() for generating passwords adhering to strict
+  rules
+
 ## v3.2.0 - 2022-10-18
 
 - Widen guzzlehttp/guzzle version constraint to allow v7
