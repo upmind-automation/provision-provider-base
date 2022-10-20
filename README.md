@@ -2,9 +2,15 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/upmind/provision-provider-base.svg?style=flat-square)](https://packagist.org/packages/upmind/provision-provider-base)
 
+**To see an example of this library in action, check out [upmind/provision-workbench](https://github.com/upmind-automation/provision-workbench#readme)**
+
 This library contains all the base interfaces, classes and logic to create
 provision category and provider classes, and register them for use in a laravel
 application.
+
+Normally this library will not be used standalone, as it will be installed as a
+sub-dependency of a provision category/provider library such as
+[upmind/provision-provider-shared-hosting](https://github.com/upmind-automation/provision-provider-shared-hosting#readme).
 
 - [Installation](#installation)
 - [Usage](#usage)
