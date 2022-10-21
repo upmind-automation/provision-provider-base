@@ -2,6 +2,13 @@
 
 All notable changes to the package will be documented in this file.
 
+## v3.4.0 - 2022-10-21
+
+Update BaseCategory Guzzle stack
+  - Record a history of requests/responses in $this->guzzleHistory
+  - Add getLastGuzzleRequestDebug() which returns an array of debug information
+    about the most recent request + response
+
 ## v3.3.0 - 2022-10-20
 
 - Add Helper::generateStrictPassword() for generating passwords adhering to strict
