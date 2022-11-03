@@ -2,6 +2,24 @@
 
 All notable changes to the package will be documented in this file.
 
+## v3.5.0 - TBC
+
+- Update RuleParser
+  - Fix parseRule() returned arguments when rule arguments are missing
+  - Add new methods including getRuleArguments(), containsAnyRule() and
+    getFieldPrefix()
+  - Update filterNestedItems() to support optionally also returning the rules of
+    the parent
+- Add Html Form classes which improve the semantic HTML field representation of
+  more complicated validation rule sets such as those containing variable length
+  arrays or nested/multi-assoc fields
+  - FormFactory
+  - Form
+  - FormElement
+  - FormGroup
+  - FormField
+- Deprecate HtmlField
+
 ## v3.4.0 - 2022-10-21
 
 Update BaseCategory Guzzle stack
