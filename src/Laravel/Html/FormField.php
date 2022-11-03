@@ -11,31 +11,12 @@ use Upmind\ProvisionBase\Laravel\Validation\ValidationHelper;
 use Upmind\ProvisionBase\Provider\DataSet\RuleParser;
 
 /**
- * Immutable value object representing a HTML field.
- *
- * @deprecated Use `\Upmind\ProvisionBase\Laravel\Html\FormField` instead.
+ * Representation of a HTML form field.
  */
-class HtmlField
+class FormField extends FormElement
 {
     /**
-     * @var string[]
-     */
-    protected const VALID_TYPES = [
-        self::TYPE_INPUT_TEXT,
-        self::TYPE_INPUT_PASSWORD,
-        self::TYPE_INPUT_NUMBER,
-        self::TYPE_INPUT_RANGE,
-        self::TYPE_CHECKBOX,
-        self::TYPE_SELECT,
-        self::TYPE_INPUT_RADIO,
-        self::TYPE_TEXTAREA,
-        self::TYPE_INPUT_DATE,
-        self::TYPE_INPUT_DATETIME,
-        self::TYPE_INPUT_TEL,
-    ];
-
-    /**
-     * Field types which may be used for passwords.
+     * Element types which may be used for passwords.
      *
      * @var string[]
      */
@@ -61,25 +42,6 @@ class HtmlField
     ];
 
     /**
-     * Data types mapped by field type.
-     *
-     * @var string[]
-     */
-    protected const DATA_TYPES = [
-        self::TYPE_INPUT_TEXT => 'string',
-        self::TYPE_INPUT_PASSWORD => 'string',
-        self::TYPE_INPUT_NUMBER => 'numeric', //numeric type - either int or float
-        self::TYPE_INPUT_RANGE => 'numeric', //numeric type - either int or float
-        self::TYPE_CHECKBOX => 'bool',
-        self::TYPE_SELECT => 'string',
-        self::TYPE_INPUT_RADIO => 'string',
-        self::TYPE_TEXTAREA => 'string',
-        self::TYPE_INPUT_DATE => 'string',
-        self::TYPE_INPUT_DATETIME => 'string',
-        self::TYPE_INPUT_TEL => 'string',
-    ];
-
-    /**
      * Regexes to match a "password-y" name.
      *
      * @var string[]
@@ -92,103 +54,12 @@ class HtmlField
     ];
 
     /**
-     * Input type=text.
-     *
-     * @var string
-     */
-    public const TYPE_INPUT_TEXT = 'input_text';
-
-    /**
-     * Input type=password.
-     *
-     * @var string
-     */
-    public const TYPE_INPUT_PASSWORD = 'input_password';
-
-    /**
-     * Input type=number.
-     *
-     * @var string
-     */
-    public const TYPE_INPUT_NUMBER = 'input_number';
-
-    /**
-     * Input type=range.
-     *
-     * @var string
-     */
-    public const TYPE_INPUT_RANGE = 'input_range';
-
-    /**
-     * Input type=date.
-     *
-     * @var string
-     */
-    public const TYPE_INPUT_DATE = 'input_date';
-
-    /**
-     * Input type=datetime-local.
-     *
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local
-     *
-     * @var string
-     */
-    public const TYPE_INPUT_DATETIME = 'input_datetime';
-
-    /**
-     * Input type=tel.
-     *
-     * @var string
-     *
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/tel
-     */
-    public const TYPE_INPUT_TEL = 'input_tel';
-
-    /**
-     * Checkbox boolean.
-     *
-     * @var string
-     */
-    public const TYPE_CHECKBOX = 'checkbox';
-
-    /**
-     * Select + options.
-     *
-     * @var string
-     */
-    public const TYPE_SELECT = 'select';
-
-    /**
-     * Radio + options.
-     *
-     * @var string
-     */
-    public const TYPE_INPUT_RADIO = 'input_radio';
-
-    /**
-     * Multi-line textarea.
-     *
-     * @var string
-     */
-    public const TYPE_TEXTAREA = 'textarea';
-
-    /**
-     * @var string
-     */
-    protected $name;
-
-    /**
      * @var string
      */
     protected $type;
 
     /**
-     * @var bool
-     */
-    protected $required;
-
-    /**
-     * @var string[]|null
+     * @var OptionData[]|null
      */
     protected $options;
 
@@ -196,13 +67,6 @@ class HtmlField
      * @var string[]|null
      */
     protected $attributes;
-
-    /**
-     * Array of laravel validation rules.
-     *
-     * @var string[]
-     */
-    protected $validationRules;
 
     /**
      * @param string $name Field name
@@ -218,7 +82,8 @@ class HtmlField
         bool $required = false,
         ?array $attributes = null,
         ?array $options = null,
-        array $validationRules = []
+        array $validationRules = [],
+        ?FormGroup $group = null
     ) {
         if (!self::typeIsValid($type)) {
             throw new InvalidArgumentException(sprintf('Invalid field type: %s', $type));
@@ -236,98 +101,7 @@ class HtmlField
         $this->attributes = $attributes;
         $this->options = self::normalizeOptions($options);
         $this->validationRules = $this->mergeDefaultValidationRules($validationRules);
-    }
-
-    /**
-     * Factory method to create a HtmlField object from an array of laravel
-     * validation rules.
-     *
-     * @param string $name
-     * @param string[] $rules
-     *
-     * @return static
-     */
-    public static function createFromValidationRules(string $name, array $rules): HtmlField
-    {
-        $options = null;
-        $attributes = null;
-        $required = false;
-
-        foreach ($rules as $rule) {
-            //normalize rule
-            $rule = strtolower(trim($rule));
-
-            //determine required attribute
-            if ($rule === 'required') {
-                $required = true;
-                continue;
-            }
-
-            //determine min/max attribute
-            if (Str::startsWith($rule, ['min:', 'max:'])) {
-                [$attribute, $value] = explode(':', $rule, 2);
-
-                $attributes[$attribute] = $value + 0; //convert string to integer|float
-            }
-
-            //determine field type from rule
-            if (isset($type)) {
-                continue;
-            }
-
-            if (Str::startsWith($rule, 'in:')) {
-                $type = self::TYPE_SELECT;
-                $options = explode(',', preg_replace('/^in:/', '', $rule));
-                continue;
-            }
-
-            if (in_array($rule, ['bool', 'boolean'])) {
-                $type = self::TYPE_CHECKBOX;
-                continue;
-            }
-
-            if (in_array($rule, ['int', 'integer', 'numeric'])) {
-                if ($rule !== 'numeric' && !isset($attributes['step'])) {
-                    //set integer step
-                    $attributes['step'] = 1;
-                }
-
-                $type = self::TYPE_INPUT_NUMBER;
-                continue;
-            }
-
-            if ($rule === 'international_phone') {
-                $type = self::TYPE_INPUT_TEL;
-            }
-
-            if (in_array($rule, ['array', 'json', 'certificate_pem'])) {
-                $type = self::TYPE_TEXTAREA;
-            }
-        }
-
-        $type = $type ?? self::TYPE_INPUT_TEXT;
-
-        if (self::typeShouldBePassword($name, $type)) {
-            $type = self::TYPE_INPUT_PASSWORD;
-        }
-
-        return new static($name, $type, $required, $attributes, $options, $rules);
-    }
-
-    /**
-     * Whether or not this field is required.
-     */
-    public function required(): bool
-    {
-        return $this->required;
-    }
-
-    /**
-     * Field name.
-     */
-    public function name(): string
-    {
-        return $this->name;
+        $this->group = $group;
     }
 
     /**
@@ -339,24 +113,9 @@ class HtmlField
     }
 
     /**
-     * @return string One of: "string", "bool", "int", "float"
-     */
-    public function dataType(): string
-    {
-        $dataType = self::DATA_TYPES[$this->type];
-
-        if ($dataType === 'numeric') {
-            //int or float
-            return (is_float(Arr::get($this->attributes(), 'step')))
-                ? 'float'
-                : 'int';
-        }
-
-        return $dataType;
-    }
-
-    /**
      * Options for select/radio fields.
+     *
+     * @return OptionData[]|null
      */
     public function options(): ?array
     {
@@ -364,7 +123,9 @@ class HtmlField
     }
 
     /**
-     * Additional attributes e.g., min, max, step.
+     * Additional field attributes e.g., min, max, step.
+     *
+     * @return string[]|null
      */
     public function attributes(): ?array
     {
@@ -372,11 +133,37 @@ class HtmlField
     }
 
     /**
-     * Laravel validation rules for this field.
+     * @return string One of: "string", "bool", "int", "float" or "array"
      */
-    public function validationRules(): array
+    public function dataType(): string
     {
-        return $this->validationRules;
+        $dataType = parent::dataType();
+
+        if ($dataType === 'numeric') {
+            return $this->determineNumericDataType($this->validationRules(), $this->attributes());
+        }
+
+        return $dataType;
+    }
+
+    /**
+     * Determine whether int or float should be used for the numeric data type.
+     */
+    protected function determineNumericDataType(array $validationRules, array $attributes): string
+    {
+        //int or float
+        if (RuleParser::containsAnyRule($validationRules, ['integer', 'int'])) {
+            return 'int';
+        }
+
+        $step = Arr::get($attributes, 'step')
+            ?: Arr::first(RuleParser::getRuleArguments($validationRules, 'step:') ?? []);
+
+        if ($step && !is_float($step)) {
+            return 'int';
+        }
+
+        return 'float';
     }
 
     /**
@@ -384,10 +171,11 @@ class HtmlField
      * into the given array of rules.
      *
      * @param array $rules Laravel validation rules
+     * @param array $attributes Field attributes
      *
      * @return array Laravel validation rules
      */
-    public function mergeDefaultValidationRules(array $rules = []): array
+    public function mergeDefaultValidationRules(array $rules = [], array $attributes = []): array
     {
         //Add in: rule for fields with options
         if ($options = $this->options()) {
@@ -402,7 +190,7 @@ class HtmlField
         }
 
         //Add arbitrary attribute rules such as min: max: step:
-        if ($attributes = $this->attributes()) {
+        if ($attributes) {
             foreach ($attributes as $attribute => $value) {
                 if (in_array(strtolower($attribute), ['minlength', 'maxlength'])) {
                     $attribute = Str::replaceLast('length', '', $attribute);
@@ -428,8 +216,12 @@ class HtmlField
             }
         }
 
+        if ($this->type() === static::TYPE_INPUT_NUMBER) {
+            $dataType = $this->determineNumericDataType($rules, $attributes);
+        }
+
         //Add data type rule e.g., string, integer
-        $dataType = ValidationHelper::shortToLongType($this->dataType());
+        $dataType = ValidationHelper::shortToLongType($dataType ?? $this->dataType());
 
         if ($dataType === 'float') {
             $dataType = 'numeric';
@@ -514,18 +306,6 @@ class HtmlField
     }
 
     /**
-     * Determine whether the given type is a valid/supported field type.
-     *
-     * @param string $type
-     *
-     * @return bool
-     */
-    public static function typeIsValid($type): bool
-    {
-        return in_array($type, self::VALID_TYPES);
-    }
-
-    /**
      * Determine whether the given field type has string values.
      *
      * @param string $type
@@ -598,12 +378,13 @@ class HtmlField
     public function __debugInfo()
     {
         return [
-            'name' => $this->name,
-            'type' => $this->type,
-            'required' => $this->required,
-            'attributes' => $this->attributes,
-            'options' => $this->options,
-            'validationRules' => $this->validationRules,
+            'name' => $this->name(),
+            'relative_name' => $this->relativeName(),
+            'type' => $this->type(),
+            'required' => $this->required(),
+            'attributes' => $this->attributes(),
+            'options' => $this->options(),
+            'validationRules' => $this->validationRules(),
         ];
     }
 }

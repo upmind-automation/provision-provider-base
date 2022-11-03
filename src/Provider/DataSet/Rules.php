@@ -8,6 +8,9 @@ use ArrayAccess;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use JsonSerializable;
+use Upmind\ProvisionBase\Laravel\Html\Form;
+use Upmind\ProvisionBase\Laravel\Html\FormElement;
+use Upmind\ProvisionBase\Laravel\Html\FormFactory;
 use Upmind\ProvisionBase\Laravel\Html\HtmlField;
 
 /**
@@ -164,6 +167,14 @@ final class Rules implements ArrayAccess, JsonSerializable, Arrayable, Jsonable
                 return HtmlField::createFromValidationRules($field, $rules);
             })
             ->all();
+    }
+
+    /**
+     * @return Form<FormElement>
+     */
+    public function toHtmlForm(): Form
+    {
+        return (new FormFactory())->create($this->toArray());
     }
 
     /**

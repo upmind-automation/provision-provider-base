@@ -253,9 +253,11 @@ class RuleParser
      *
      * @return array Returns only items nested under the given parent field e.g., `['foo.baz' => 'bam']`
      */
-    public static function filterNestedItems(array $items, string $parentField): array
+    public static function filterNestedItems(array $items, string $parentField, bool $includeParent = false): array
     {
-        $prefix = self::prefixField('', $parentField);
+        $prefix = $includeParent
+            ? [$parentField, self::prefixField('', $parentField)]
+            : self::prefixField('', $parentField);
 
         return array_filter($items, function (string $field) use ($prefix) {
             return Str::startsWith($field, $prefix);
@@ -314,6 +316,22 @@ class RuleParser
         return Str::startsWith($field, $prefix)
             ? Str::replaceFirst($prefix, '', $field)
             : $field;
+    }
+
+    /**
+     * Returns the prefix of the given field, if any.
+     *
+     * @param string $field E.g., `parent_field.field`
+     *
+     * @return string|null E.g., `parent_field`
+     */
+    public static function getFieldPrefix(string $field): ?string
+    {
+        if (!Str::contains($field, '.')) {
+            return null;
+        }
+
+        return Str::before($field, '.');
     }
 
     /**
