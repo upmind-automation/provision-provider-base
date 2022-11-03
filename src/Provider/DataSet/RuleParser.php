@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Upmind\ProvisionBase\Provider\DataSet;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationRuleParser;
@@ -147,6 +148,26 @@ class RuleParser
     }
 
     /**
+     * Get the arguments of the given rule from an array of field rules, if
+     * any.
+     *
+     * @param string[] $fieldRules
+     * @param string $rule
+     *
+     * @return string[]|null
+     */
+    public static function getRuleArguments(array $fieldRules, string $rule): ?array
+    {
+        foreach ($fieldRules as $fieldRule) {
+            if (Str::startsWith($fieldRule, Str::finish($rule, ':'))) {
+                return self::parseRule($fieldRule)[1] ?? [];
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Implode the given base rule and arguments into a single rule string.
      *
      * @param string $baseRule
@@ -157,6 +178,26 @@ class RuleParser
         return $arguments
             ? sprintf('%s:%s', $baseRule, implode(',', $arguments))
             : $baseRule;
+    }
+
+    /**
+     * Determine whether any of the given validation rules contain any of
+     * the given check rules.
+     *
+     * @param string[]|array $fieldRules Validation rules for a single field or a set of rules for multiple fields
+     * @param string[]|Collection<string> $checkRules Rules to check e.g., [`string`, `required_if:`]
+     *
+     * @return bool
+     */
+    public static function containsAnyRule(array $fieldRules, $checkRules): bool
+    {
+        foreach ($checkRules as $rule) {
+            if (self::containsRule($fieldRules, $rule)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
