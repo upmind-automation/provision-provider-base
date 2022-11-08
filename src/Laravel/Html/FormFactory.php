@@ -195,6 +195,12 @@ class FormFactory
             $return[$field] = $fieldRules;
         }
 
-        return $return;
+        return array_map(function ($rules) {
+            while (false !== ($pos = array_search(RuleParser::NESTED_DATA_SET_RULE, $rules))) {
+                $rules[$pos] = 'array';
+            }
+
+            return array_values(array_unique($rules));
+        }, $return);
     }
 }
