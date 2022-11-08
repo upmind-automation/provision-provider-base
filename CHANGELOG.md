@@ -2,7 +2,7 @@
 
 All notable changes to the package will be documented in this file.
 
-## v3.5.0 - TBC
+## v3.5.0 - 2022-11-08
 
 - Update RuleParser
   - Fix parseRule() returned arguments when rule arguments are missing
