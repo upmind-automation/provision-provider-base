@@ -155,6 +155,8 @@ final class Rules implements ArrayAccess, JsonSerializable, Arrayable, Jsonable
     }
 
     /**
+     * @deprecated Use `Rules::toHtmlForm()` instead
+     *
      * @return HtmlField[]
      */
     public function toHtmlFields(): array
