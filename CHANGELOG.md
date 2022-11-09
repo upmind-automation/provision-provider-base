@@ -2,6 +2,10 @@
 
 All notable changes to the package will be documented in this file.
 
+## v3.5.2 - 2022-11-09
+
+- Add missing deprecation flag to Rules::toHtmlFields()
+
 ## v3.5.1 - 2022-11-09
 
 - Remove unnecessary FormFactory::createField() strtolower() to fix issues with
