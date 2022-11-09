@@ -2,6 +2,11 @@
 
 All notable changes to the package will be documented in this file.
 
+## v3.5.1 - 2022-11-09
+
+- Remove unnecessary FormFactory::createField() strtolower() to fix issues with
+  case sensitive `in:` rule arguments
+
 ## v3.5.0 - 2022-11-08
 
 - Update RuleParser
