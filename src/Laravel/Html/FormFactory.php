@@ -90,7 +90,7 @@ class FormFactory
 
         foreach ($rules as $rule) {
             //normalize rule
-            $rule = strtolower(trim($rule));
+            $rule = trim($rule);
 
             //determine required attribute
             if ($rule === 'required') {
