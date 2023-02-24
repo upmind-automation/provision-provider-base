@@ -2,6 +2,10 @@
 
 All notable changes to the package will be documented in this file.
 
+## v3.5.3 - 2023-02-24
+
+- Update OptionData rules allow empty label
+
 ## v3.5.2 - 2022-11-09
 
 - Add missing deprecation flag to Rules::toHtmlFields()
