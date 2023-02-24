@@ -20,7 +20,7 @@ class OptionData extends DataSet
     {
         return new Rules([
             'group_label' => ['nullable', 'string'],
-            'label' => ['required', 'string'],
+            'label' => ['present', 'string'],
             'value' => ['present'],
         ]);
     }
