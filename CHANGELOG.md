@@ -2,6 +2,10 @@
 
 All notable changes to the package will be documented in this file.
 
+## v3.6.1 - 2023-02-24
+
+- Update OptionData rules allow empty label
+
 ## v3.6 - 2023-02-24
 
 - Add new Helper methods
