@@ -115,4 +115,57 @@ class Helper
 
         return $password;
     }
+
+    /**
+     * Build a URL from an array of URL fragments.
+     *
+     * @param string[] $parts Fragments of a URL as returned from SPL function parse_url(), which can include any or all
+     * of: `scheme`, `user`, `pass`, `host`, `port`, `path`, `query`, `fragment`.
+     * @param string[] $partWhitelist List of parts to use when building the URL (all by default)
+     *
+     * @link https://www.php.net/manual/en/function.parse-url.php#refsect1-function.parse-url-returnvalues
+     *
+     * @return string Formed url
+     */
+    public static function buildUrl(
+        array $parts,
+        array $whitelist = ['scheme', 'user', 'pass', 'host', 'port', 'path', 'query', 'fragment']
+    ): string {
+        $parts = array_intersect_key($parts, array_flip($whitelist));
+
+        return (isset($parts['scheme']) ? "{$parts['scheme']}:" : '')
+            . ((isset($parts['user']) || isset($parts['host'])) ? '//' : '')
+            . (isset($parts['user']) ? "{$parts['user']}" : '')
+            . (isset($parts['pass']) ? ":{$parts['pass']}" : '')
+            . (isset($parts['user']) ? '@' : '')
+            . (isset($parts['host']) ? "{$parts['host']}" : '')
+            . (isset($parts['port']) ? ":{$parts['port']}" : '')
+            . (isset($parts['path']) ? "{$parts['path']}" : '')
+            . (isset($parts['query']) ? "?{$parts['query']}" : '')
+            . (isset($parts['fragment']) ? "#{$parts['fragment']}" : '');
+    }
+
+    /**
+     * Appends a query string to a URL.
+     *
+     * @param  string $url The URL to append the query to
+     * @param  string|string[] $query The HTTP query string or array of query parameters
+     *
+     * @return string The resulting URL
+     */
+    public static function urlAppendQuery($url, $query): string
+    {
+        if (is_array($query)) {
+            $query = http_build_query($query);
+        }
+
+        $query = ltrim($query, '?&');
+
+        if ($query) {
+            $glue = strstr($url, '?') === false ? '?' : '&';
+            return $url . $glue . $query;
+        }
+
+        return $url;
+    }
 }
