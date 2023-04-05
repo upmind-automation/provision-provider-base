@@ -9,12 +9,14 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Upmind\ProvisionBase\Exception\InvalidDataSetException;
 use Upmind\ProvisionBase\Exception\InvalidProviderConfigurationException;
+use Upmind\ProvisionBase\Provider\Contract\HasSystemInfo;
 use Upmind\ProvisionBase\Provider\Contract\LogsDebugData;
 use Upmind\ProvisionBase\Provider\Contract\ProviderInterface;
 use Upmind\ProvisionBase\Provider\Contract\StoresFiles;
 use Upmind\ProvisionBase\Registry\Registry;
 use Upmind\ProvisionBase\Provider\DataSet\DataSet;
 use Upmind\ProvisionBase\Provider\DataSet\StorageConfiguration;
+use Upmind\ProvisionBase\Provider\DataSet\SystemInfo;
 use Upmind\ProvisionBase\Provider\Storage\Storage;
 use Upmind\ProvisionBase\Registry\Data\CategoryRegister;
 use Upmind\ProvisionBase\Registry\Data\ProviderRegister;
@@ -40,13 +42,23 @@ class ProviderFactory
     protected $logger;
 
     /**
+     * @var SystemInfo
+     */
+    protected $systemInfo;
+
+    /**
      * @param Registry $registry
      */
-    public function __construct(Registry $registry, Filesystem $filesystem, LoggerInterface $logger)
-    {
+    public function __construct(
+        Registry $registry,
+        Filesystem $filesystem,
+        LoggerInterface $logger,
+        ?SystemInfo $systemInfo = null
+    ) {
         $this->registry = $registry;
         $this->filesystem = $filesystem;
         $this->logger = $logger;
+        $this->systemInfo = $systemInfo ?? $this->createSystemInfo();
     }
 
     /**
@@ -98,6 +110,10 @@ class ProviderFactory
             $providerInstance->setStorage($this->createStorage($storageConfiguration, $providerRegister));
         }
 
+        if ($providerInstance instanceof HasSystemInfo) {
+            $providerInstance->setSystemInfo($this->getSystemInfo());
+        }
+
         return new Provider($providerRegister, $providerInstance);
     }
 
@@ -118,6 +134,20 @@ class ProviderFactory
         return new Storage($this->filesystem, $path, $storeConfig->secret_key);
     }
 
+    /**
+     * Create default system info.
+     */
+    public function createSystemInfo(): SystemInfo
+    {
+        $outgoingIp = isset($_SERVER['SERVER_ADDR'])
+            ? $_SERVER['SERVER_ADDR']
+            : gethostbyname(gethostname() ?: php_uname('n'));
+
+        return new SystemInfo([
+            'outgoing_ips' => [$outgoingIp],
+        ]);
+    }
+
     public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
@@ -136,5 +166,15 @@ class ProviderFactory
     public function getFilesystem(): Filesystem
     {
         return $this->filesystem;
+    }
+
+    public function setSystemInfo(SystemInfo $systemInfo): void
+    {
+        $this->systemInfo = $systemInfo;
+    }
+
+    public function getSystemInfo(): SystemInfo
+    {
+        return $this->systemInfo;
     }
 }

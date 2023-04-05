@@ -16,10 +16,12 @@ use LogicException;
 use Psr\Http\Message\MessageInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use RuntimeException;
 use Throwable;
 use Upmind\ProvisionBase\Exception\ProvisionFunctionError;
 use Upmind\ProvisionBase\Provider\Contract\LogsDebugData;
 use Upmind\ProvisionBase\Provider\DataSet\ResultData;
+use Upmind\ProvisionBase\Provider\DataSet\SystemInfo;
 use Upmind\ProvisionBase\Provider\Storage\Storage;
 
 /**
@@ -40,6 +42,13 @@ abstract class BaseCategory implements Contract\CategoryInterface
      * @var LoggerInterface|null
      */
     protected $log;
+
+    /**
+     * System/environment metadata.
+     *
+     * @var SystemInfo|null
+     */
+    protected $systemInfo;
 
     /**
      * Array containing the history of guzzle requests for this instance.
@@ -122,6 +131,26 @@ abstract class BaseCategory implements Contract\CategoryInterface
         }
 
         return $this->log;
+    }
+
+    /**
+     * Sets the SystemInfo instance.
+     */
+    final public function setSystemInfo(SystemInfo $systemInfo): void
+    {
+        $this->systemInfo = $systemInfo;
+    }
+
+    /**
+     * Get SystemInfo instance containing metadata about the system/runtime environment.
+     */
+    final public function getSystemInfo(): SystemInfo
+    {
+        if (!isset($this->systemInfo)) {
+            throw new LogicException('SystemInfo only set if Provider or Category implement HasSystemInfo');
+        }
+
+        return $this->systemInfo;
     }
 
     /**
