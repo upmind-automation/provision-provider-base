@@ -2,6 +2,11 @@
 
 All notable changes to the package will be documented in this file.
 
+## v3.7.0 - 2023-04-05
+
+- Add SystemInfo dataset to contain system/environment/runtime metadata e.g., `outgoing_ips`
+  and inject into all Provider instances in ProviderFactory
+
 ## v3.6.1 - 2023-02-24
 
 - Update OptionData rules allow empty label
