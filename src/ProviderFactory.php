@@ -12,12 +12,9 @@ use Upmind\ProvisionBase\Exception\InvalidProviderConfigurationException;
 use Upmind\ProvisionBase\Provider\Contract\HasSystemInfo;
 use Upmind\ProvisionBase\Provider\Contract\LogsDebugData;
 use Upmind\ProvisionBase\Provider\Contract\ProviderInterface;
-use Upmind\ProvisionBase\Provider\Contract\StoresFiles;
 use Upmind\ProvisionBase\Registry\Registry;
 use Upmind\ProvisionBase\Provider\DataSet\DataSet;
-use Upmind\ProvisionBase\Provider\DataSet\StorageConfiguration;
 use Upmind\ProvisionBase\Provider\DataSet\SystemInfo;
-use Upmind\ProvisionBase\Provider\Storage\Storage;
 use Upmind\ProvisionBase\Registry\Data\CategoryRegister;
 use Upmind\ProvisionBase\Registry\Data\ProviderRegister;
 
@@ -65,13 +62,12 @@ class ProviderFactory
      * @param string|CategoryRegister $category Category identifier, class or register
      * @param string|ProviderRegister $provider Provider identifier, class or register
      * @param array|DataSet $providerConfiguration Provider configuration data
-     * @param array|StorageConfiguration|null $storageConfiguration Storage configuration data
      *
      * @throws \Upmind\ProvisionBase\Exception\InvalidProviderConfigurationException If the given config data is invalid
      *
      * @return Provider Provider wrapper
      */
-    public function create($category, $provider, $providerConfiguration, $storageConfiguration = null): Provider
+    public function create($category, $provider, $providerConfiguration): Provider
     {
         if (!$categoryRegister = $this->registry->getCategory($category)) {
             throw new RuntimeException('Category not found');
@@ -101,37 +97,11 @@ class ProviderFactory
             $providerInstance->setLogger($this->getLogger());
         }
 
-        if ($providerInstance instanceof StoresFiles) {
-            if (!$storageConfiguration instanceof StorageConfiguration) {
-                $storageConfiguration = new StorageConfiguration($storageConfiguration ?? []);
-            }
-            $storageConfiguration->validateIfNotYetValidated();
-
-            $providerInstance->setStorage($this->createStorage($storageConfiguration, $providerRegister));
-        }
-
         if ($providerInstance instanceof HasSystemInfo) {
             $providerInstance->setSystemInfo($this->getSystemInfo());
         }
 
         return new Provider($providerRegister, $providerInstance);
-    }
-
-    /**
-     * Create a storage instance using the given configuration for the given provider.
-     * The Storage instance's path will be computed from the configuration base
-     * path and the category and provider identifiers.
-     */
-    public function createStorage(StorageConfiguration $storeConfig, ProviderRegister $providerRegister): Storage
-    {
-        $path = sprintf(
-            '%s/%s/%s',
-            rtrim($storeConfig->base_path, '/'),
-            $providerRegister->getCategory()->getIdentifier(),
-            $providerRegister->getIdentifier()
-        );
-
-        return new Storage($this->filesystem, $path, $storeConfig->secret_key);
     }
 
     /**
