@@ -75,7 +75,7 @@ abstract class DataSet implements ArrayAccess, JsonSerializable, Arrayable, Json
      * @param mixed[] $values Raw data
      * @param bool $autoValidation Enable or disable auto-validation of this data set instance
      */
-    public function __construct($values = [], bool $autoValidation = true)
+    final public function __construct($values = [], bool $autoValidation = true)
     {
         $this->values = $this->rawValues = (array)$this->recursiveToArray($values); // convert to raw array(s)
 
