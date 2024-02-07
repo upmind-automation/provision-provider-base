@@ -1,0 +1,33 @@
+# Workflow name
+name: Static Analysis
+
+# Triggers
+on:
+  push:
+    branches:
+      - 'master'
+  pull_request:
+    branches:
+      - 'master'
+
+# Jobs/Pipelines
+jobs:
+  phpstan:
+    name: 'PHP Stan'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ 7.4 ]
+    steps:
+      - name: "Checkout Code"
+        uses: actions/checkout@v4
+      - name: 'Setup PHP'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "${{ matrix.php }}"
+      - name: PHPStan Static Analysis
+        uses: php-actions/phpstan@v3
+        env:
+          REQUIRE_DEV: true
+        with:
+          args: analyse
