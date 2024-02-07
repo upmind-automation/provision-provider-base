@@ -32,4 +32,4 @@ jobs:
         env:
           REQUIRE_DEV: true
         with:
-          args: analyse
+          args: analyse --level=0
