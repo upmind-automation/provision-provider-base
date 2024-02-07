@@ -1,0 +1,48 @@
+# Workflow name
+name: Static Analysis
+
+# Triggers
+on:
+  push:
+    branches:
+      - 'main'
+      - 'v3.7-dev'
+  pull_request:
+    branches:
+      - 'main'
+      - 'v3.7-dev'
+
+# Jobs/Pipelines
+jobs:
+  phpstan:
+    name: 'PHP Stan'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ 7.4 ]
+    steps:
+      - name: "Checkout Code"
+        uses: actions/checkout@v4
+
+      - name: "Setup PHP with tools"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "${{ matrix.php }}"
+          tools: composer, phpstan
+
+      - name: "Get composer cache directory"
+        id: composer-cache
+        run: 'echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT'
+
+      - name: "Cache dependencies"
+        uses: actions/cache@v3
+        with:
+          path: "${{ steps.composer-cache.outputs.dir }}"
+          key: "${{ runner.os }}-php-${{ matrix.php}}-composer-${{ hashFiles('**/composer.json') }}"
+          restore-keys: "${{ runner.os }}-php-${{ matrix.php}}-composer-"
+
+      - name: "Install Composer dependencies"
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: "Run PHPStan Static Analysis"
+        run: phpstan analyse
