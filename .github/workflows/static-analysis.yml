@@ -5,10 +5,12 @@ name: Static Analysis
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
+      - 'v3.7-dev'
   pull_request:
     branches:
-      - 'master'
+      - 'main'
+      - 'v3.7-dev'
 
 # Jobs/Pipelines
 jobs:
