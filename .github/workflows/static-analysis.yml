@@ -28,7 +28,7 @@ jobs:
         with:
           php-version: "${{ matrix.php }}"
       - name: PHPStan Static Analysis
-        uses: php-actions/phpstan@v3
+        uses: docker://oskarstark/phpstan-ga
         env:
           REQUIRE_DEV: true
         with:
