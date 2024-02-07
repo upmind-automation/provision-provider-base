@@ -6,7 +6,7 @@ namespace Upmind\ProvisionBase\Exception;
 
 use Upmind\ProvisionBase\Exception\Contract\ProvisionException;
 
-class RegistryError extends \LogicException implements ProvisionException
+final class RegistryError extends \LogicException implements ProvisionException
 {
     public static function forInvalidCategoryClass($class): self
     {
