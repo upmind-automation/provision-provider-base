@@ -42,7 +42,7 @@ jobs:
           restore-keys: "${{ runner.os }}-php-${{ matrix.php}}-composer-"
 
       - name: "Install Composer dependencies"
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist
 
       - name: "Run PHPStan Static Analysis"
         run: phpstan analyse
