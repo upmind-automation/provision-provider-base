@@ -27,10 +27,8 @@ class ClearRegistryCache extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle(CacheInterface $cache)
+    public function handle(CacheInterface $cache): int
     {
         $this->clearRegistry($cache);
 
