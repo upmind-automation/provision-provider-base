@@ -27,10 +27,8 @@ class ListRegistry extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle(Registry $registry)
+    public function handle(Registry $registry): int
     {
         $this->call('upmind:provision:summary');
 

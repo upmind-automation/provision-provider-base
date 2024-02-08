@@ -28,10 +28,8 @@ class CacheRegistry extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle(Registry $registry, CacheInterface $cache)
+    public function handle(Registry $registry, CacheInterface $cache): int
     {
         $this->cacheRegistry($registry, $cache);
 
