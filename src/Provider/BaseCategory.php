@@ -22,20 +22,12 @@ use Upmind\ProvisionBase\Exception\ProvisionFunctionError;
 use Upmind\ProvisionBase\Provider\Contract\LogsDebugData;
 use Upmind\ProvisionBase\Provider\DataSet\ResultData;
 use Upmind\ProvisionBase\Provider\DataSet\SystemInfo;
-use Upmind\ProvisionBase\Provider\Storage\Storage;
 
 /**
  * The root class all Categories should extend from
  */
 abstract class BaseCategory implements Contract\CategoryInterface
 {
-    /**
-     * Filesystem storage access.
-     *
-     * @var Storage|null
-     */
-    protected $store;
-
     /**
      * Debug logger.
      *
@@ -90,27 +82,6 @@ abstract class BaseCategory implements Contract\CategoryInterface
         throw (new ProvisionFunctionError($message, 0, $previous))
             ->withData($data)
             ->withDebug($debug);
-    }
-
-    /**
-     * Set the Store instance to permit filesystem access.
-     */
-    final public function setStorage(Storage $store): void
-    {
-        $this->store = $store;
-    }
-
-    /**
-     * Get the Storage instance for filesystem access. A Store instance will only
-     * be set if the Category or Provider implement the StoresFiles interface.
-     */
-    final public function getStorage(): Storage
-    {
-        if (!isset($this->store)) {
-            throw new LogicException('Storage instance only set if Provider or Category implement StoresFiles');
-        }
-
-        return $this->store;
     }
 
     /**
