@@ -17,6 +17,8 @@ use Upmind\ProvisionBase\Exception\InvalidDataSetException;
  * DTO encapsulating a data set. If the data set is invalid according to the
  * rules returned by static::rules(), an `InvalidDataSetException` will be thrown
  * for any attempt to take data from it.
+ *
+ * @phpstan-consistent-constructor
  */
 abstract class DataSet implements ArrayAccess, JsonSerializable, Arrayable, Jsonable
 {
@@ -75,7 +77,7 @@ abstract class DataSet implements ArrayAccess, JsonSerializable, Arrayable, Json
      * @param mixed[] $values Raw data
      * @param bool $autoValidation Enable or disable auto-validation of this data set instance
      */
-    final public function __construct($values = [], bool $autoValidation = true)
+    public function __construct($values = [], bool $autoValidation = true)
     {
         $this->values = $this->rawValues = (array)$this->recursiveToArray($values); // convert to raw array(s)
 
