@@ -114,10 +114,7 @@ final class Rules implements ArrayAccess, JsonSerializable, Arrayable, Jsonable
         return $this->parentField;
     }
 
-    /**
-     * @return bool
-     */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         $this->expand($this->parentField);
 
@@ -127,27 +124,21 @@ final class Rules implements ArrayAccess, JsonSerializable, Arrayable, Jsonable
     /**
      * @return string[]
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): array
     {
         $this->expand($this->parentField);
 
         return $this->expandedRules[$offset];
     }
 
-    /**
-     * @return void
-     */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->expand($this->parentField);
 
         $this->expandedRules[$offset] = $value;
     }
 
-    /**
-     * @return void
-     */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->expand($this->parentField);
 
@@ -191,10 +182,7 @@ final class Rules implements ArrayAccess, JsonSerializable, Arrayable, Jsonable
         return $this->expandedRules;
     }
 
-    /**
-     * @return array
-     */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
