@@ -49,7 +49,7 @@ abstract class AbstractElement implements ElementInterface
         return static::getType() === self::TYPE_CONDITION;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
