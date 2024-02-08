@@ -24,6 +24,11 @@ class Response implements ApiResponse
     protected $request;
 
     /**
+     * @var int
+     */
+    protected $httpCode;
+
+    /**
      * @var string
      */
     protected $message;
