@@ -392,17 +392,17 @@ abstract class DataSet implements ArrayAccess, JsonSerializable, Arrayable, Json
     /**
      * Don't allow mutations to the data set from outside.
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
-        return;
+        //
     }
 
     /**
      * Don't allow mutations to the data set from outside.
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
-        return;
+        //
     }
 
     /**
@@ -479,10 +479,7 @@ abstract class DataSet implements ArrayAccess, JsonSerializable, Arrayable, Json
         return $value;
     }
 
-    /**
-     * @return array
-     */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
