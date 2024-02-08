@@ -15,7 +15,7 @@ use Upmind\ProvisionBase\Provider\DataSet\RuleParser;
  *
  * @deprecated Use `\Upmind\ProvisionBase\Laravel\Html\FormField` instead.
  */
-class HtmlField
+final class HtmlField
 {
     /**
      * @var string[]

@@ -17,6 +17,8 @@ use Upmind\ProvisionBase\Exception\InvalidDataSetException;
  * DTO encapsulating a data set. If the data set is invalid according to the
  * rules returned by static::rules(), an `InvalidDataSetException` will be thrown
  * for any attempt to take data from it.
+ *
+ * @phpstan-consistent-constructor
  */
 abstract class DataSet implements ArrayAccess, JsonSerializable, Arrayable, Jsonable
 {
