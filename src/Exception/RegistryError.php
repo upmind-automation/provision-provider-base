@@ -35,7 +35,7 @@ class RegistryError extends \LogicException implements ProvisionException
 
     public static function forUninstantiableProviderClass($class): self
     {
-        return new static("Provision Provider {$provider} is not instantiable");
+        return new static("Provision Provider {$class} is not instantiable");
     }
 
     public static function forUndefinedProviderFunctions($category, $provider, array $undefinedFunctions): self
