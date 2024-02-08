@@ -38,7 +38,7 @@ abstract class AbstractElement implements ElementInterface
      */
     final public static function isNode(): bool
     {
-        return self::getType() === self::TYPE_NODE;
+        return static::getType() === self::TYPE_NODE;
     }
 
     /**
@@ -46,7 +46,7 @@ abstract class AbstractElement implements ElementInterface
      */
     final public static function isCondition(): bool
     {
-        return self::getType() === self::TYPE_CONDITION;
+        return static::getType() === self::TYPE_CONDITION;
     }
 
     public function jsonSerialize()
