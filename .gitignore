@@ -1,10 +1,10 @@
 # Composer
-/composer.lock
-/vendor/
+composer.lock
+vendor/
 
 # Docker
-/.docker/Dockerfile
-/docker-compose.yml
+.docker/Dockerfile
+docker-compose.yml
 
 # IDE
 .vscode/
