@@ -375,10 +375,8 @@ abstract class DataSet implements ArrayAccess, JsonSerializable, Arrayable, Json
 
     /**
      * Get a value from the data set using array access syntax.
-     *
-     * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->get($offset, function () use ($offset) {
             if (!array_key_exists($offset, $this->rules->raw())) {
