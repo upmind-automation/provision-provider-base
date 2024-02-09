@@ -1,4 +1,14 @@
-composer.lock
-vendor
+# Composer
+/composer.lock
+/vendor/
+
+# Docker
+/.docker/Dockerfile
+/docker-compose.yml
+
+# IDE
 .vscode/
 .idea/
+
+# System
+.DS_Store
