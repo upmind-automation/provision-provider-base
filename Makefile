@@ -3,6 +3,7 @@
 # List all available Makefile commands.
 help:
 	@echo "Available commands:"
+	@echo "   make help                  : List all available Makefile commands"
 	@echo "   make setup-php74           : Start the dev environment with PHP 7.4"
 	@echo "   make shell                 : Get an interactive shell on the PHP container"
 	@echo "   make static-analysis       : Run Static Analysis (PHPStan)"
