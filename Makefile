@@ -1,4 +1,18 @@
-# Typing 'make setup-php74' will start the dev environment with PHP 7.4 & xdebug
+.PHONY: help
+
+# List all available Makefile commands.
+help:
+	@echo "Available commands:"
+	@echo "   make setup-php74           : Start the dev environment with PHP 7.4"
+	@echo "   make shell                 : Get an interactive shell on the PHP container"
+	@echo "   make static-analysis       : Run Static Analysis (PHPStan)"
+	@echo "   make start-contain         : Start the dev environment"
+	@echo "   make stop-containers       : Stop the dev environment"
+	@echo "   make kill-containers       : Stop and remove all containers"
+	@echo "   make composer-install      : Install composer dependencies"
+
+
+# Typing 'make setup-php74' will start the dev environment with PHP 7.4
 setup-php74: stop-containers --prep-dockerfile-php74 start-containers --remove-packages composer-install
 
 # Get a shell on the PHP container
