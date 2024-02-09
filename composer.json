@@ -19,7 +19,7 @@
         "guzzlehttp/guzzle": "^6.3||^7.0",
         "illuminate/console": "^6.20 || ^10.0",
         "illuminate/support": "^6.20 || ^10.0",
-        "illuminate/validation": "5.8.*||^6.0||^10.0",
+        "illuminate/validation": "^6.20 || ^10.0",
         "league/iso3166": "^2.0 || ^3.0 || ^4.0",
         "propaganistas/laravel-phone": "^4.2||^5.0",
         "psr/log": "^1.1||^2.0||^3.0"
