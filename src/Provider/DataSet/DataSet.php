@@ -17,6 +17,8 @@ use Upmind\ProvisionBase\Exception\InvalidDataSetException;
  * DTO encapsulating a data set. If the data set is invalid according to the
  * rules returned by static::rules(), an `InvalidDataSetException` will be thrown
  * for any attempt to take data from it.
+ *
+ * @phpstan-consistent-constructor
  */
 abstract class DataSet implements ArrayAccess, JsonSerializable, Arrayable, Jsonable
 {
@@ -373,10 +375,8 @@ abstract class DataSet implements ArrayAccess, JsonSerializable, Arrayable, Json
 
     /**
      * Get a value from the data set using array access syntax.
-     *
-     * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->get($offset, function () use ($offset) {
             if (!array_key_exists($offset, $this->rules->raw())) {
@@ -390,17 +390,17 @@ abstract class DataSet implements ArrayAccess, JsonSerializable, Arrayable, Json
     /**
      * Don't allow mutations to the data set from outside.
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
-        return;
+        //
     }
 
     /**
      * Don't allow mutations to the data set from outside.
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
-        return;
+        //
     }
 
     /**
@@ -477,10 +477,7 @@ abstract class DataSet implements ArrayAccess, JsonSerializable, Arrayable, Json
         return $value;
     }
 
-    /**
-     * @return array
-     */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
