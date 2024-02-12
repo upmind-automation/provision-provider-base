@@ -7,7 +7,7 @@ help:
 	@echo "   make setup-php74           : Start the dev environment with PHP 7.4"
 	@echo "   make shell                 : Get an interactive shell on the PHP container"
 	@echo "   make static-analysis       : Run Static Analysis (PHPStan)"
-	@echo "   make start-contain         : Start the dev environment"
+	@echo "   make start-containers      : Start the dev environment"
 	@echo "   make stop-containers       : Stop the dev environment"
 	@echo "   make kill-containers       : Stop and remove all containers"
 	@echo "   make composer-install      : Install composer dependencies"
