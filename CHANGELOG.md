@@ -2,6 +2,15 @@
 
 All notable changes to the package will be documented in this file.
 
+## v4.0 - 2024-02-13
+
+- Update minimum PHP version to 8.1 and minimum Laravel version to 10.0
+  - Update dependencies accordingly
+  - Improve various return types + constructor safety accordingly
+- Remove Provider Storage filesystem adapter + related code
+- Remove deprecated HtmlField + related code
+- Deprecate AttributeQuery classes
+
 ## v3.7.0 - 2023-04-05
 
 - Add SystemInfo dataset to contain system/environment/runtime metadata e.g., `outgoing_ips`
