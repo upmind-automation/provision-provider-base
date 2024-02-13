@@ -70,7 +70,7 @@ class FormField extends FormElement
 
     /**
      * @param string $name Field name
-     * @param string $type Field type, e.g., HtmlField::TYPE_SELECT, HtmlField::TYPE_INPUT_PASSWORD
+     * @param string $type Field type, e.g., FormField::TYPE_SELECT, FormField::TYPE_INPUT_PASSWORD
      * @param bool $required Whether or not the field is required
      * @param string[]|null $attributes Key=>Value attribute pairs e.g., ['min' => 3, 'max' => 10]
      * @param string[]|null $options Value=>Label option pairs for select/radio fields e.g., ['4wd' => '4-Wheel Drive']
