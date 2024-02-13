@@ -6,6 +6,9 @@ namespace Upmind\ProvisionBase\AttributeQuery;
 
 use InvalidArgumentException;
 
+/**
+ * @deprecated
+ */
 abstract class AbstractElement implements ElementInterface
 {
     /**

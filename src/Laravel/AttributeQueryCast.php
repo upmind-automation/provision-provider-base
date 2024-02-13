@@ -7,6 +7,9 @@ namespace Upmind\ProvisionBase\Laravel;
 use Upmind\ProvisionBase\AttributeQuery\Query;
 use Upmind\ProvisionBase\AttributeQuery\QueryFactory;
 
+/**
+ * @deprecated
+ */
 class AttributeQueryCast
 {
     /**

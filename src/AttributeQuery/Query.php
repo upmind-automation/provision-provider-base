@@ -8,7 +8,9 @@ use Illuminate\Support\Arr;
 use InvalidArgumentException;
 
 /**
- * Attribute query node
+ * Attribute query node.
+ *
+ * @deprecated
  */
 class Query extends AbstractElement
 {

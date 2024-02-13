@@ -9,6 +9,8 @@ use Upmind\ProvisionBase\AttributeQuery\Query;
 
 /**
  * Attribute query must conform to a specific structure.
+ *
+ * @deprecated
  */
 class AttributeQueryValidator
 {

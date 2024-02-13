@@ -10,6 +10,9 @@ use Illuminate\Validation\ValidationException;
 use InvalidArgumentException;
 use Upmind\ProvisionBase\Laravel\AttributeQueryValidator;
 
+/**
+ * @deprecated
+ */
 class QueryFactory
 {
     /**

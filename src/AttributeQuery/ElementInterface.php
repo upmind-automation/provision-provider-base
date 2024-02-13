@@ -6,6 +6,9 @@ namespace Upmind\ProvisionBase\AttributeQuery;
 
 use JsonSerializable;
 
+/**
+ * @deprecated
+ */
 interface ElementInterface extends JsonSerializable
 {
     /**
