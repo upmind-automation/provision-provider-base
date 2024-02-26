@@ -540,6 +540,15 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
+## Docker
+The package provides samples of Dockerfile files to support local development and testing.
+
+To use them, you need to have Docker and Docker Compose installed on your machine. 
+
+A `Makefile` is provided to simplify the usage of the docker-compose files.
+  - `make setup-php74` sets up the PHP 7.4 development environment.
+  - `make static-analysis` runs the static analysis.
+
 ## Credits
 
  - [Harry Lewis](https://github.com/uphlewis)
