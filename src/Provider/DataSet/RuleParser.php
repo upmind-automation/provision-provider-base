@@ -234,7 +234,7 @@ class RuleParser
                 return true; //exact match
             }
 
-            if ($ignoreRuleArgs) {
+            if ($ignoreRuleArgs && is_string($rule)) {
                 if (Str::startsWith($rule, Str::finish($checkRule, ':'))) {
                     return true; //match ignoring rule args
                 }
