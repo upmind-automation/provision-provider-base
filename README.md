@@ -13,6 +13,7 @@ sub-dependency of a provision category/provider library such as
 [upmind/provision-provider-shared-hosting](https://github.com/upmind-automation/provision-provider-shared-hosting#readme).
 
 - [Installation](#installation)
+  - [Docker](#docker)
 - [Usage](#usage)
   - [Categories](#create-a-category)
       - [Example Category](#example-category)
@@ -37,6 +38,17 @@ sub-dependency of a provision category/provider library such as
 ```bash
 composer require upmind/provision-provider-base
 ```
+
+### Docker
+
+The package provides samples of Dockerfile files to support local development and testing.
+
+To use them, you need to have Docker and Docker Compose installed on your machine.
+
+A `Makefile` is provided to simplify the usage of the docker-compose files.
+  - `make setup-php82` sets up the PHP 8.2 development environment.
+  - `make static-analysis` runs the static analysis.
+
 ## Usage
 
 The sections below describe how to create Provision Categories and Provider
@@ -539,15 +551,6 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-## Docker
-The package provides samples of Dockerfile files to support local development and testing.
-
-To use them, you need to have Docker and Docker Compose installed on your machine. 
-
-A `Makefile` is provided to simplify the usage of the docker-compose files.
-  - `make setup-php82` sets up the PHP 8.2 development environment.
-  - `make static-analysis` runs the static analysis.
 
 ## Credits
 
