@@ -4,6 +4,7 @@ All notable changes to the package will be documented in this file.
 
 ## v3.7.1 - 2024-02-27
 
+- Fix PHPStan issues for PHP 7.4
 - Fix RuleParser issue with Rule expected to be a string, while a class or callback
   might be provided, when a Laravel application is loaded
 
