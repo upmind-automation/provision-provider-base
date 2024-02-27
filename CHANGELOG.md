@@ -2,6 +2,10 @@
 
 All notable changes to the package will be documented in this file.
 
+## Unreleased
+
+- Fix issue with Rule expected to be a string, while a class or callback might be provided, when a Laravel application is loaded.
+
 ## v3.7.0 - 2023-04-05
 
 - Add SystemInfo dataset to contain system/environment/runtime metadata e.g., `outgoing_ips`
