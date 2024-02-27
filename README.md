@@ -546,7 +546,7 @@ The package provides samples of Dockerfile files to support local development an
 To use them, you need to have Docker and Docker Compose installed on your machine. 
 
 A `Makefile` is provided to simplify the usage of the docker-compose files.
-  - `make setup-php74` sets up the PHP 7.4 development environment.
+  - `make setup-php82` sets up the PHP 8.2 development environment.
   - `make static-analysis` runs the static analysis.
 
 ## Credits
@@ -554,6 +554,8 @@ A `Makefile` is provided to simplify the usage of the docker-compose files.
  - [Harry Lewis](https://github.com/uphlewis)
  - [Nikolai Arsov](https://github.com/nikiarsov777)
  - [Ivaylo Georgiev](https://github.com/Georgiev-Ivaylo)
+ - [Roussetos Karafyllakis](https://github.com/RoussKS)
+ - [Adam Quaile](https://github.com/adamquaile)
  - [All Contributors](../../contributors)
 
 ## License
