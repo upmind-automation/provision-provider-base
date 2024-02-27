@@ -2,9 +2,10 @@
 
 All notable changes to the package will be documented in this file.
 
-## Unreleased
+## v3.7.1 - 2024-02-27
 
-- Fix issue with Rule expected to be a string, while a class or callback might be provided, when a Laravel application is loaded.
+- Fix RuleParser issue with Rule expected to be a string, while a class or callback
+  might be provided, when a Laravel application is loaded
 
 ## v3.7.0 - 2023-04-05
 
