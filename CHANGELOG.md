@@ -2,6 +2,11 @@
 
 All notable changes to the package will be documented in this file.
 
+## v4.0.1 - 2024-02-27
+
+- Fix RuleParser issue with Rule expected to be a string, while a class or callback
+  might be provided, when a Laravel application is loaded
+
 ## v4.0 - 2024-02-13
 
 - Update minimum PHP version to 8.1 and minimum Laravel version to 10.0
@@ -10,6 +15,11 @@ All notable changes to the package will be documented in this file.
 - Remove Provider Storage filesystem adapter + related code
 - Remove deprecated HtmlField + related code
 - Deprecate AttributeQuery classes
+
+## v3.7.1 - 2024-02-27
+
+- Fix RuleParser issue with Rule expected to be a string, while a class or callback
+  might be provided, when a Laravel application is loaded
 
 ## v3.7.0 - 2023-04-05
 
