@@ -116,7 +116,7 @@ class Query extends AbstractElement
     }
 
     /**
-     * @param ElementInterface[]|callable<Query> $all Child elements or callable for appending child elements
+     * @param ElementInterface[]|callable $all Child elements or callable for appending child elements
      *
      * @return self $this
      */
@@ -138,7 +138,7 @@ class Query extends AbstractElement
     }
 
     /**
-     * @param ElementInterface[]|callable<Query> $any Child elements or callable for appending child elements
+     * @param ElementInterface[]|callable $any Child elements or callable for appending child elements
      *
      * @return self $this
      */
