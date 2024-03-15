@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Upmind\ProvisionBase\Laravel;
 
 use Exception;
+use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Validation\Validator as LaravelValidator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\ServiceProvider as BaseProvider;
-use Illuminate\Support\Facades\Validator;
 use League\ISO3166\ISO3166;
 use libphonenumber\NumberParseException;
 use Propaganistas\LaravelPhone\Exceptions\NumberParseException as PropaganistasNumberParseException;
 use Upmind\ProvisionBase\Laravel\Validation\Rules\CertificatePem;
+use Upmind\ProvisionBase\Provider\DataSet\DataSet;
 use Upmind\ProvisionBase\Provider\DataSet\RuleParser;
 use Upmind\ProvisionBase\Provider\DataSet\Validator as DataSetValidator;
 
@@ -24,12 +24,14 @@ use Upmind\ProvisionBase\Provider\DataSet\Validator as DataSetValidator;
  */
 class ValidationServiceProvider extends BaseProvider
 {
+    private ?Factory $validatorFactory = null;
+
     /**
      * Bootstrap services.
      *
-     * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function boot()
+    public function boot(): void
     {
         $this->bootCustomRules();
 
@@ -55,10 +57,16 @@ class ValidationServiceProvider extends BaseProvider
         $this->bootCertificatePemRule();
     }
 
-    protected function bootDataSetValidatorResolver()
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    protected function bootDataSetValidatorResolver(): void
     {
-        /** @var \Illuminate\Validation\Factory $factory */
-        $factory = Validator::getFacadeRoot();
+        $factory = $this->getValidatorFactory();
+
+        // Set Validator Factory for our DataSet classes.
+        DataSet::setValidatorFactory($factory);
+
         $factory->resolver(function ($translator, $data, $rules, $messages, $customAttributes) use ($factory) {
             if (RuleParser::containsRule($rules, RuleParser::NESTED_DATA_SET_RULE)) {
                 return new DataSetValidator($factory, $translator, $data, $rules, $messages, $customAttributes);
@@ -68,37 +76,45 @@ class ValidationServiceProvider extends BaseProvider
         });
     }
 
-    protected function bootAttributeQueryRule()
+    protected function bootAttributeQueryRule(): void
     {
-        Validator::extend(
-            AttributeQueryValidator::RULE_NAME,
-            'Upmind\ProvisionBase\Laravel\AttributeQueryValidator@validateAttributeQuery'
-        );
+        $this->app->resolving(Factory::class, function (Factory $factory) {
+            $factory->extend(
+                AttributeQueryValidator::RULE_NAME,
+                'Upmind\ProvisionBase\Laravel\AttributeQueryValidator@validateAttributeQuery'
+            );
+        });
     }
 
-    protected function bootAlphaScoreRule()
+    protected function bootAlphaScoreRule(): void
     {
         $extension = function ($attribute, $value, $parameters, $validator) {
             return !preg_match('/[^\w]/', strval($value));
         };
-        $message = 'This value must only contain letters, numbers and underscores.';
 
-        Validator::extend('alpha_score', $extension, $message);
-        Validator::extend('alpha-score', $extension, $message);
+        $this->app->resolving(Factory::class, function (Factory $factory) use ($extension) {
+            $message = 'This value must only contain letters, numbers and underscores.';
+
+            $factory->extend('alpha_score', $extension, $message);
+            $factory->extend('alpha-score', $extension, $message);
+        });
     }
 
-    protected function bootAlphaDashDotRule()
+    protected function bootAlphaDashDotRule(): void
     {
         $extension = function ($attribute, $value, $parameters, $validator) {
             return !preg_match('/[^\w\-\.]/', strval($value));
         };
-        $message = 'This value must only contain letters, numbers, dashes, underscores and periods.';
 
-        Validator::extend('alpha_dash_dot', $extension, $message);
-        Validator::extend('alpha-dash-dot', $extension, $message);
+        $this->app->resolving(Factory::class, function (Factory $factory) use ($extension,) {
+            $message = 'This value must only contain letters, numbers, dashes, underscores and periods.';
+
+            $factory->extend('alpha_dash_dot', $extension, $message);
+            $factory->extend('alpha-dash-dot', $extension, $message);
+        });
     }
 
-    protected function bootDomainNameRule()
+    protected function bootDomainNameRule(): void
     {
         $extension = function ($attribute, $value, $parameters, $validator) {
             /** @link https://stackoverflow.com/a/4694816/4741456 */
@@ -107,10 +123,14 @@ class ValidationServiceProvider extends BaseProvider
                 && preg_match('/^.{3,253}$/', $value) //overall length check
                 && preg_match('/^[^\.]{1,63}(\.[^\.]{1,63})*$/', $value); //length of each label
         };
-        $message = 'This is not a valid domain name.';
 
-        Validator::extend('domain-name', $extension, $message);
-        Validator::extend('domain_name', $extension, $message);
+
+        $this->app->resolving(Factory::class, function (Factory $factory) use ($extension,) {
+            $message = 'This is not a valid domain name.';
+
+            $factory->extend('alpha_dash_dot', $extension, $message);
+            $factory->extend('alpha-dash-dot', $extension, $message);
+        });
     }
 
     /**
@@ -121,32 +141,39 @@ class ValidationServiceProvider extends BaseProvider
      * which it is possible to parse out the international dialling code from the
      * rest of the phone number.
      */
-    protected function bootInternationalPhoneRule()
+    protected function bootInternationalPhoneRule(): void
     {
-        /** @param LaravelValidator $validator */
+        /**
+         * @param $attribute
+         * @param $value
+         * @param $parameters
+         * @param $validator
+         * @return bool
+         * @throws \Illuminate\Contracts\Container\BindingResolutionException
+         */
         $extension = function ($attribute, $value, $parameters, $validator) {
             if (!empty($parameters[0])) {
                 //validate phone number for the input country code
                 $countryCode = Arr::get($validator->getData(), $parameters[0]);
 
-                $extraValidator = Validator::make([
+                $factory = $this->getValidatorFactory();
+
+                $extraValidator = $factory->make([
                     'phone' => $value
                 ], [
                     'phone' => sprintf('phone:%s', $countryCode)
                 ]);
 
-                if ($extraValidator->fails()) {
-                    if (!$this->manualCheckPhones($value)) {
-                        // manually adding an error will cause validation to fail with this specific error message
-                        $validator->errors()
-                            ->add(
-                                $attribute,
-                                $this->makeReplacements('This is not a valid :COUNTRY_CODE phone number', [
-                                    'attribute' => $attribute,
-                                    'country_code' => $countryCode,
-                                ])
-                            );
-                    }
+                if ($extraValidator->fails() && !$this->manualCheckPhones($value)) {
+                    // manually adding an error will cause validation to fail with this specific error message
+                    $validator->errors()
+                        ->add(
+                            $attribute,
+                            $this->makeReplacements('This is not a valid :COUNTRY_CODE phone number', [
+                                'attribute' => $attribute,
+                                'country_code' => $countryCode,
+                            ])
+                        );
                 }
 
                 return true;
@@ -177,12 +204,12 @@ class ValidationServiceProvider extends BaseProvider
             return true;
         };
 
-        $message = 'This is not a valid international phone number';
-
-        Validator::extend('international_phone', $extension, $message);
+        $this->app->resolving(Factory::class, function (Factory $factory) use ($extension) {
+            $factory->extend('international_phone', $extension, 'This is not a valid international phone number');
+        });
     }
 
-    protected function bootCountryCodeRule()
+    protected function bootCountryCodeRule(): void
     {
         $extension = function ($attribute, $value, $parameters, $validator) {
             try {
@@ -214,24 +241,29 @@ class ValidationServiceProvider extends BaseProvider
                 return false;
             }
         };
-        $message = 'This is not a valid country code.';
 
-        Validator::extend('country_code', $extension, $message);
+        $this->app->resolving(Factory::class, function (Factory $factory) use ($extension) {
+            $factory->extend('country_code', $extension, 'This is not a valid country code.');
+        });
     }
 
     protected function bootStepRule(): void
     {
-        Validator::extend('step', 'Upmind\ProvisionBase\Laravel\Validation\Rules\Step@validateStep');
-        Validator::replacer('step', 'Upmind\ProvisionBase\Laravel\Validation\Rules\Step@replaceStep');
+        $this->app->resolving(Factory::class, function (Factory $factory) {
+            $factory->extend('step', 'Upmind\ProvisionBase\Laravel\Validation\Rules\Step@validateStep');
+            $factory->replacer('step', 'Upmind\ProvisionBase\Laravel\Validation\Rules\Step@replaceStep');
+        });
     }
 
     protected function bootCertificatePemRule(): void
     {
-        Validator::extend(
-            'certificate_pem',
-            CertificatePem::class,
-            'The :attribute must be a certificate in PEM format'
-        );
+        $this->app->resolving(Factory::class, function (Factory $factory) {
+            $factory->extend(
+                'certificate_pem',
+                CertificatePem::class,
+                'The :attribute must be a certificate in PEM format'
+            );
+        });
     }
 
     /**
@@ -308,5 +340,17 @@ class ValidationServiceProvider extends BaseProvider
         }
 
         return false;
+    }
+
+    /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    private function getValidatorFactory(): Factory
+    {
+        if ($this->validatorFactory === null) {
+            $this->validatorFactory = $this->app->make(Factory::class);
+        }
+
+        return $this->validatorFactory;
     }
 }

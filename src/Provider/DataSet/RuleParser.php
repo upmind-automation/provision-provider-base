@@ -6,7 +6,6 @@ namespace Upmind\ProvisionBase\Provider\DataSet;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationRuleParser;
 use Illuminate\Validation\Validator as LaravelValidator;
@@ -25,10 +24,7 @@ class RuleParser
      */
     public const NESTED_DATA_SET_RULE = 'upmind_nested_data_set';
 
-    /**
-     * @var LaravelValidator|null
-     */
-    protected static $validator;
+    protected static ?LaravelValidator $validator = null;
 
     /**
      * Parse the given data set rules, expanding nested references to other data
@@ -80,12 +76,10 @@ class RuleParser
      */
     public static function expandWildcardRules(array $rawRules, array $data): array
     {
-        // The primary purpose of this parser is to expand any "*" rules to the all
-        // of the explicit rules needed for the given data. For example the rule
+        // The primary purpose of this parser is to expand any "*" rules
+        // to all the explicit rules needed for the given data. For example the rule
         // names.* would get expanded to names.0, names.1, etc. for this data.
-        $parsed = (new ValidationRuleParser($data))->explode($rawRules);
-
-        return $parsed->rules;
+        return (new ValidationRuleParser($data))->explode($rawRules)->rules;
     }
 
     /**
@@ -382,6 +376,10 @@ class RuleParser
 
     protected static function getValidator(): LaravelValidator
     {
-        return self::$validator = (self::$validator ?? Validator::make([], []));
+        if (self::$validator === null) {
+            self::$validator = DataSet::getValidatorFactory()->make([], []);
+        }
+
+        return self::$validator;
     }
 }
