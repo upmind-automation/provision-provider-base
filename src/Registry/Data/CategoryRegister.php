@@ -122,9 +122,9 @@ final class CategoryRegister extends ClassRegister
                 ->map(function (ReflectionMethod $method) {
                     return new FunctionRegister(
                         $method->getName(),
+                        $this,
                         $this->getMethodParameterDataSetClass($method),
-                        $this->getMethodReturnDataSetClass($method),
-                        $this
+                        $this->getMethodReturnDataSetClass($method)
                     );
                 });
         }
