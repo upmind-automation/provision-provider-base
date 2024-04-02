@@ -45,9 +45,9 @@ final class FunctionRegister implements RegisterInterface
      */
     public function __construct(
         string $name,
-        ClassRegister $parent,
         ?string $parameterDataSetClass = null,
-        ?string $returnDataSetClass = null
+        ?string $returnDataSetClass = null,
+        ClassRegister $parent
     ) {
         $this->name = $name;
         $this->parent = $parent;
