@@ -2,6 +2,10 @@
 
 All notable changes to the package will be documented in this file.
 
+## Unreleased
+
+- Remove Guzzle stack history & request debug data (which use history)
+
 ## v4.0.1 - 2024-02-27
 
 - Fix RuleParser issue with Rule expected to be a string, while a class or callback

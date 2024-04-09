@@ -43,13 +43,6 @@ abstract class BaseCategory implements Contract\CategoryInterface
     protected $systemInfo;
 
     /**
-     * Array containing the history of guzzle requests for this instance.
-     *
-     * @var array<Message[]>
-     */
-    protected $guzzleHistory = [];
-
-    /**
      * Returns the result of a successful provision function.
      *
      * @param string $message A user-friendly success message
@@ -126,14 +119,11 @@ abstract class BaseCategory implements Contract\CategoryInterface
 
     /**
      * Get a guzzle handler stack which logs requests/responses if provider is
-     * an instance of LogsDebugData and $debugLog === true. Requests and responses
-     * will also be stored in $this->guzzleHistory.
+     * an instance of LogsDebugData and $debugLog === true.
      */
     protected function getGuzzleHandlerStack(bool $debugLog = false): HandlerStack
     {
         $stack = HandlerStack::create();
-
-        $stack->push(Middleware::history($this->guzzleHistory));
 
         if (!$debugLog || !$this instanceof LogsDebugData) {
             return $stack;
@@ -156,40 +146,5 @@ abstract class BaseCategory implements Contract\CategoryInterface
         $stack->push($logger, 'Logger');
 
         return $stack;
-    }
-
-    /**
-     * Returns an assoc array of debug data for the last guzzle request/response
-     * for guzzle clients whose stack was obtained from `$this->getGuzzleHandlerStack()`.
-     *
-     * @return array<array<string[]>>|null
-     */
-    protected function getLastGuzzleRequestDebug(): ?array
-    {
-        /** @var Request|null $lastRequest */
-        $lastRequest = Arr::last($this->guzzleHistory)['request'] ?? null;
-        /** @var Response|null $lastResponse */
-        $lastResponse = Arr::last($this->guzzleHistory)['response'] ?? null;
-
-        if (!$lastRequest) {
-            return null;
-        }
-
-        $debug = [
-            'last_request' => [
-                'method' => $lastRequest->getMethod(),
-                'url' => $lastRequest->getUri()->__toString(),
-            ],
-            'last_response' => null
-        ];
-
-        if ($lastResponse) {
-            $debug['last_response'] = [
-                'http_code' => $lastResponse->getStatusCode(),
-                'body' => Str::limit($lastResponse->getBody()->__toString(), 300),
-            ];
-        }
-
-        return $debug;
     }
 }
