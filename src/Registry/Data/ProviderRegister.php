@@ -56,7 +56,7 @@ final class ProviderRegister extends ClassRegister
                 $dataSetClass = $this->getMethodParameterDataSetClass($constructor);
             }
 
-            $this->constructor = new FunctionRegister($constructor->getName(), $dataSetClass ?? null, null, $this);
+            $this->constructor = new FunctionRegister($constructor->getName(), $this, $dataSetClass ?? null, null);
         }
 
         return $this->constructor;
@@ -93,7 +93,7 @@ final class ProviderRegister extends ClassRegister
     /**
      * Return the available provision functions.
      *
-     * @return Collection<FunctionRegister>|FunctionRegister[]
+     * @return Collection<array-key, FunctionRegister>
      */
     public function getFunctions(): Collection
     {
