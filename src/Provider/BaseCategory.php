@@ -125,19 +125,16 @@ abstract class BaseCategory implements Contract\CategoryInterface
     }
 
     /**
-     * Get a guzzle handler stack which logs requests/responses if provider is
-     * an instance of LogsDebugData and $debugLog === true. Requests and responses
-     * will also be stored in $this->guzzleHistory.
+     * Get a guzzle handler stack which logs requests/responses via the provider's
+     * injected PSR-3 logger.
+     *
+     * @param bool $debugLog @deprecated To be removed in a future version
      */
     protected function getGuzzleHandlerStack(bool $debugLog = false): HandlerStack
     {
         $stack = HandlerStack::create();
 
         $stack->push(Middleware::history($this->guzzleHistory));
-
-        if (!$debugLog || !$this instanceof LogsDebugData) {
-            return $stack;
-        }
 
         // Rewinds HTTP message body seek position after the stream has been read by Logger middleware
         $rewindMessageBody = function (MessageInterface $message) {
