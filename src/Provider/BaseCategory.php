@@ -118,14 +118,13 @@ abstract class BaseCategory implements Contract\CategoryInterface
     }
 
     /**
-     * Get a guzzle handler stack which logs requests/responses if provider is
-     * an instance of LogsDebugData and $debugLog === true.
+     * Get a guzzle handler stack which logs requests/responses if provider is an instance of LogsDebugData
      */
-    protected function getGuzzleHandlerStack(bool $debugLog = false): HandlerStack
+    protected function getGuzzleHandlerStack(): HandlerStack
     {
         $stack = HandlerStack::create();
 
-        if (!$debugLog || !$this instanceof LogsDebugData) {
+        if (!$this instanceof LogsDebugData) {
             return $stack;
         }
 
