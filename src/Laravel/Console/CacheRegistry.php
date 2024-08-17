@@ -4,6 +4,7 @@ namespace Upmind\ProvisionBase\Laravel\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Cache\Repository as CacheInterface;
+use Upmind\ProvisionBase\Laravel\Events\RegistryUpdatedEvent;
 use Upmind\ProvisionBase\Laravel\ProvisionServiceProvider;
 use Upmind\ProvisionBase\Registry\Registry;
 
@@ -63,6 +64,11 @@ class CacheRegistry extends Command
 
         $this->info('Done.');
 
-        return !isset($oldHash) || $oldHash !== $newHash;
+        // Dispatch event to notify listeners that the registry has been updated.
+        $isRegistryUpdated = !isset($oldHash) || $oldHash !== $newHash;
+
+        RegistryUpdatedEvent::dispatch();
+
+        return $isRegistryUpdated;
     }
 }
