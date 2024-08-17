@@ -2,3 +2,7 @@ parameters:
     level: 0
     paths:
         - src
+    ignoreErrors:
+        -
+            message: '#Required parameter \$parent follows optional parameter#'
+            path: src/Registry/Data/FunctionRegister.php
