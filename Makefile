@@ -38,7 +38,7 @@ start-containers:
 
 # Stop the dev environment
 stop-containers:
-	docker compose down
+	if [ -f "./docker-compose.yml" ]; then docker compose down; else echo ''; fi
 
 # Stop and remove all containers
 kill-containers:
