@@ -4,6 +4,7 @@ namespace Upmind\ProvisionBase\Laravel\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Cache\Repository as CacheInterface;
+use Illuminate\Contracts\Events\Dispatcher as EventDispatcherInterface;
 use Upmind\ProvisionBase\Laravel\Events\RegistryUpdatedEvent;
 use Upmind\ProvisionBase\Laravel\ProvisionServiceProvider;
 use Upmind\ProvisionBase\Registry\Registry;
@@ -30,9 +31,14 @@ class CacheRegistry extends Command
     /**
      * Execute the console command.
      */
-    public function handle(Registry $registry, CacheInterface $cache): int
+    public function handle(Registry $registry, CacheInterface $cache, EventDispatcherInterface $eventDispatcher): int
     {
-        $this->cacheRegistry($registry, $cache);
+        $result = $this->cacheRegistry($registry, $cache);
+
+        // Dispatch event to notify listeners that the registry has been updated.
+        if ($result === true) {
+            $eventDispatcher->dispatch(new RegistryUpdatedEvent());
+        }
 
         if (!$this->option('without-summary')) {
             $this->call('upmind:provision:summary');
@@ -42,7 +48,7 @@ class CacheRegistry extends Command
     }
 
     /**
-     * @return bool Whether or not new registry data was written to cache
+     * Whether, or not, new registry data was written to cache.
      */
     protected function cacheRegistry(Registry $registry, CacheInterface $cache): bool
     {
@@ -64,11 +70,6 @@ class CacheRegistry extends Command
 
         $this->info('Done.');
 
-        // Dispatch event to notify listeners that the registry has been updated.
-        $isRegistryUpdated = !isset($oldHash) || $oldHash !== $newHash;
-
-        RegistryUpdatedEvent::dispatch();
-
-        return $isRegistryUpdated;
+        return !isset($oldHash) || $oldHash !== $newHash;
     }
 }
