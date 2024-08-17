@@ -1,4 +1,4 @@
-.PHONY: help
+.PHONY: help setup-php81 setup-php82 setup-php83 shell static-analysis start-containers stop-containers kill-containers composer-install
 
 # List all available Makefile commands.
 help:
