@@ -2,6 +2,10 @@
 
 All notable changes to the package will be documented in this file.
 
+## v4.2.0 - 2024-08-19
+
+- Dispatch event upon registry cache if content has changed
+
 ## v4.1.0 - 2024-04-16
 
 - Ignore and deprecate `$debugLog` argument in `BaseCategory::getGuzzleHandlerStack()`
