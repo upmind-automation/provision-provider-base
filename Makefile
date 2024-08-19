@@ -1,4 +1,4 @@
-.PHONY: help
+.PHONY: help setup-php81 setup-php82 setup-php83 shell static-analysis start-containers stop-containers kill-containers composer-install
 
 # List all available Makefile commands.
 help:
@@ -38,7 +38,7 @@ start-containers:
 
 # Stop the dev environment
 stop-containers:
-	docker compose down
+	if [ -f "./docker-compose.yml" ]; then docker compose down; else echo ''; fi
 
 # Stop and remove all containers
 kill-containers:
