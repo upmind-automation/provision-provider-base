@@ -16,8 +16,6 @@ use League\ISO3166\ISO3166;
 use libphonenumber\NumberParseException;
 use Propaganistas\LaravelPhone\Exceptions\NumberParseException as PropaganistasNumberParseException;
 use Upmind\ProvisionBase\Laravel\Validation\Rules\CertificatePem;
-use Upmind\ProvisionBase\Provider\DataSet\RuleParser;
-use Upmind\ProvisionBase\Provider\DataSet\Validator as DataSetValidator;
 
 /**
  * Provides additional validation rules useful for Providers
@@ -32,8 +30,6 @@ class ValidationServiceProvider extends BaseProvider
     public function boot()
     {
         $this->bootCustomRules();
-
-        $this->bootDataSetValidatorResolver();
     }
 
     protected function bootCustomRules(): void
@@ -53,19 +49,6 @@ class ValidationServiceProvider extends BaseProvider
         $this->bootStepRule();
 
         $this->bootCertificatePemRule();
-    }
-
-    protected function bootDataSetValidatorResolver()
-    {
-        /** @var \Illuminate\Validation\Factory $factory */
-        $factory = Validator::getFacadeRoot();
-        $factory->resolver(function ($translator, $data, $rules, $messages, $customAttributes) use ($factory) {
-            if (RuleParser::containsRule($rules, RuleParser::NESTED_DATA_SET_RULE)) {
-                return new DataSetValidator($factory, $translator, $data, $rules, $messages, $customAttributes);
-            }
-
-            return new LaravelValidator($translator, $data, $rules, $messages, $customAttributes);
-        });
     }
 
     protected function bootAttributeQueryRule()

@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Upmind\ProvisionBase\Provider\DataSet;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationRuleParser;
 use Illuminate\Validation\Validator as LaravelValidator;
+use Upmind\LaravelValidationRules\Rules\RuleParser as UpmindValidationRulesRuleParser;
 
 class RuleParser
 {
@@ -80,12 +79,7 @@ class RuleParser
      */
     public static function expandWildcardRules(array $rawRules, array $data): array
     {
-        // The primary purpose of this parser is to expand any "*" rules to the all
-        // of the explicit rules needed for the given data. For example the rule
-        // names.* would get expanded to names.0, names.1, etc. for this data.
-        $parsed = (new ValidationRuleParser($data))->explode($rawRules);
-
-        return $parsed->rules;
+        return UpmindValidationRulesRuleParser::expandWildcardRules($rawRules, $data);
     }
 
     /**
@@ -97,7 +91,7 @@ class RuleParser
      */
     public static function explodeRules($rules): array
     {
-        return (is_string($rules)) ? explode('|', $rules) : $rules;
+        return UpmindValidationRulesRuleParser::explodeRules($rules);
     }
 
     /**
@@ -191,13 +185,7 @@ class RuleParser
      */
     public static function containsAnyRule(array $fieldRules, $checkRules): bool
     {
-        foreach ($checkRules as $rule) {
-            if (self::containsRule($fieldRules, $rule)) {
-                return true;
-            }
-        }
-
-        return false;
+        return UpmindValidationRulesRuleParser::containsAnyRule($fieldRules, $checkRules);
     }
 
     /**
@@ -212,36 +200,7 @@ class RuleParser
      */
     public static function containsRule(array $fieldRules, string $checkRule): bool
     {
-        if (Arr::isAssoc($fieldRules) || is_array(Arr::first($fieldRules))) {
-            //this appears to be a set of rules for multiple fields
-            foreach ($fieldRules as $rules) {
-                if (self::containsRule(self::explodeRules($rules), $checkRule)) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        $ignoreRuleArgs = true;
-
-        if (Str::contains($checkRule, ':') && !Str::endsWith($checkRule, ':')) {
-            $ignoreRuleArgs = false; //only return true for exact match since rule args have been passed
-        }
-
-        foreach ($fieldRules as $rule) {
-            if ($rule === $checkRule) {
-                return true; //exact match
-            }
-
-            if ($ignoreRuleArgs && is_string($rule)) {
-                if (Str::startsWith($rule, Str::finish($checkRule, ':'))) {
-                    return true; //match ignoring rule args
-                }
-            }
-        }
-
-        return false;
+        return UpmindValidationRulesRuleParser::containsRule($fieldRules, $checkRule);
     }
 
     /**
@@ -255,13 +214,7 @@ class RuleParser
      */
     public static function filterNestedItems(array $items, string $parentField, bool $includeParent = false): array
     {
-        $prefix = $includeParent
-            ? [$parentField, self::prefixField('', $parentField)]
-            : self::prefixField('', $parentField);
-
-        return array_filter($items, function (string $field) use ($prefix) {
-            return Str::startsWith($field, $prefix);
-        }, ARRAY_FILTER_USE_KEY);
+        return UpmindValidationRulesRuleParser::filterNestedItems($items, $parentField, $includeParent);
     }
 
     /**
@@ -294,7 +247,7 @@ class RuleParser
      */
     public static function prefixField(string $field, ?string $parentField): string
     {
-        return $parentField ? sprintf('%s.%s', $parentField, $field) : $field;
+        return UpmindValidationRulesRuleParser::prefixField($field, $parentField);
     }
 
     /**
@@ -307,15 +260,7 @@ class RuleParser
      */
     public static function unprefixField(string $field, ?string $parentField): string
     {
-        if (!$parentField) {
-            return $field;
-        }
-
-        $prefix = self::prefixField('', $parentField);
-
-        return Str::startsWith($field, $prefix)
-            ? Str::replaceFirst($prefix, '', $field)
-            : $field;
+        return UpmindValidationRulesRuleParser::unprefixField($field, $parentField);
     }
 
     /**
@@ -344,17 +289,7 @@ class RuleParser
      */
     public static function prefixFieldKeys(array $items, ?string $parentField): array
     {
-        if (!$parentField) {
-            return $items;
-        }
-
-        $returnItems = [];
-
-        foreach ($items as $field => $item) {
-            $returnItems[self::prefixField($field, $parentField)] = $item;
-        }
-
-        return $returnItems;
+        return UpmindValidationRulesRuleParser::prefixFieldKeys($items, $parentField);
     }
 
     /**
@@ -367,17 +302,7 @@ class RuleParser
      */
     public static function unprefixFieldKeys(array $items, ?string $parentField): array
     {
-        if (!$parentField) {
-            return $items;
-        }
-
-        $returnItems = [];
-
-        foreach ($items as $field => $item) {
-            $returnItems[self::unprefixField($field, $parentField)] = $item;
-        }
-
-        return $returnItems;
+        return UpmindValidationRulesRuleParser::unprefixFieldKeys($items, $parentField);
     }
 
     protected static function getValidator(): LaravelValidator

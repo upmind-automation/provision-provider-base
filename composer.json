@@ -21,7 +21,8 @@
         "propaganistas/laravel-phone": "^4.2",
         "illuminate/encryption": "5.8.*|^6.0",
         "illuminate/console": "5.8.*|6.*",
-        "psr/log": "^1.1"
+        "psr/log": "^1.1",
+        "upmind/laravel-validation-rules": "^1.0"
     },
     "extra": {
         "laravel": {
