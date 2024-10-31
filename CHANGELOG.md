@@ -2,6 +2,10 @@
 
 All notable changes to the package will be documented in this file.
 
+## v3.7.2 - 2024-10-31
+
+- Fix `certificate_pem` validation rule to also work with 76 character lines of base64
+
 ## v3.7.1 - 2024-02-27
 
 - Fix PHPStan issues for PHP 7.4
