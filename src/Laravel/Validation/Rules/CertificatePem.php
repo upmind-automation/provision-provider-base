@@ -19,7 +19,7 @@ class CertificatePem
      * Inspired by @link https://regex101.com/r/mGnr7I/1
      */
     public const PATTERN = '/^(-----BEGIN (PUBLIC KEY|(RSA )?PRIVATE KEY|CERTIFICATE)-----(\n|\r|\r\n)' // header
-        . '([0-9a-zA-Z\+\/=]{64}(\n|\r|\r\n))*([0-9a-zA-Z\+\/=]{1,63}(\n|\r|\r\n))?' // content
+        . '([0-9a-zA-Z\+\/=]{64,76}(\n|\r|\r\n))*([0-9a-zA-Z\+\/=]{1,76}(\n|\r|\r\n))?' // content
         . '-----END (PUBLIC KEY|(RSA )?PRIVATE KEY|CERTIFICATE)-----(\n|\r|\r\n)?)+$/'; // footer
 
     /**
